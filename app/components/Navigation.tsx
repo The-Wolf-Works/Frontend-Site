@@ -1,41 +1,61 @@
-import { client } from "@/lib/client"
-import { GET_PRIMARY_MENU } from "@/lib/queries"
-import type { GetMenuResponse, MenuItem } from "@/lib/types"
+'use client'
+
+import Image from "next/image"
 import Link from "next/link"
-import Image from 'next/image'
+import { useState } from "react"
 
-export const Navigation = async () => {
-    const data = await client.request<GetMenuResponse>(GET_PRIMARY_MENU)
-    const menuItems = data.menuItems.nodes
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/#how-it-works", label: "How It Works" },
+  { href: "/#pricing", label: "Pricing Guide" },
+  { href: "/#about", label: "About Us" },
+  { href: "/contact", label: "Contact Us" },
+]
 
-    return (
-        <div className="bg-white w-full px-12 py-5 flex items-center justify-between">
-            <Link href="/" className="text-xl font-bold text-gray-900">
-                <Image
-                    src="/logo.png"
-                    alt="The Wolf Works"
-                    height={50}
-                    width={150}
-                    className="h-[50px] w-auto"
-                    priority
-                />
-            </Link>
-            <ul className="flex items-center gap-10">
-            {menuItems.map((item) => (
-                <li
-                    key={item.id}
-                    className="list-none"
-                >
+export default function Navigation() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white flex items-center justify-between px-6 py-4">
+        <Link href="/">
+          <Image
+            src="/logo.png"
+            alt="The Wolf Works"
+            height={50}
+            width={150}
+            className="h-[50px] w-auto"
+            priority
+          />
+        </Link>
+        <button
+          onClick={() => setOpen(!open)}
+          aria-label="Toggle navigation"
+          className="flex flex-col gap-1.5 p-2 -mr-2"
+        >
+          <span className="block w-6 h-0.5 bg-gray-900" />
+          <span className="block w-6 h-0.5 bg-gray-900" />
+          <span className="block w-6 h-0.5 bg-gray-900" />
+        </button>
+      </header>
+
+      {open && (
+        <nav className="fixed top-[74px] left-0 right-0 z-40 bg-white border-t border-gray-100 px-6 py-6 shadow-lg">
+          <ul className="flex flex-col gap-6">
+            {navLinks.map(({ href, label }) => (
+              <li key={href}>
                 <Link
-                    href={item.path}
-                    className="text-sm font-medium tracking-widest uppercase text-gray-900 no-underline hover:text-gray-500 transition-colors duration-200"
+                  href={href}
+                  onClick={() => setOpen(false)}
+                  className="text-sm font-medium uppercase tracking-widest text-gray-900 hover:text-gray-500 transition-colors"
                 >
-                    {item.label}
+                  {label}
                 </Link>
-                </li>
+              </li>
             ))}
-            </ul>
-        </div>
-    )
+          </ul>
+        </nav>
+      )}
+    </>
+  )
 }
-export default Navigation
