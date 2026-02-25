@@ -28,10 +28,11 @@ export interface GetPageBySlugResponse {
 }
 
 export interface MenuItem {
+    cssClasses: string[];
     id: string;
     label: string;
-    url: string;
     path: string;
+    url: string;
 }
 
 export interface GetMenuResponse {

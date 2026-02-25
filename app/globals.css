@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+@theme {
+    --breakpoint-nav: 1000px;
+    --color-brand-primary: #00535c;
+}
