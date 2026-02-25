@@ -10,16 +10,16 @@ export const Footer = () => {
                 <div className="flex flex-col gap-4">
                     <Link href="/">
                         <Image
-                            src="/logo-white.svg"
+                            src="/logo-white.png"
                             alt="The Wolf Works Logo"
                             height={40}
                             width={120}
-                            className="object-contain brightness-0 invert"
+                            className="object-contain"
                         />
                     </Link>
-                    <p className="text-base font-light text-gray-300">Your AI Report Specialist</p>
+                    <p className="text-base font-medium text-gray-300">Your AI Report Specialist</p>
                 </div>
-                <LinkList className="text-base font-light text-gray-300 hover:text-white transition-colors duration-200" links={[
+                <LinkList className="text-base font-medium text-gray-300 hover:text-white transition-colors duration-200" links={[
                     { label: "Privacy Policy", href: "/privacy-policy" },
                     { label: "Terms & Conditions", href: "/terms-conditions" },
                     { label: "Cookie Policy", href: "/cookie-policy"}

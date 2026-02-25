@@ -10,7 +10,7 @@ export const Navigation = async () => {
     const menuItems = data.menuItems.nodes
 
     return (
-        <div className="relative bg-white w-full p-12 flex items-center justify-between">
+        <div className="relative bg-white w-full p-6 nav:p-12 flex items-center justify-between">
             <Link href="/" className="shrink-0 text-xl font-bold text-gray-900">
                 <Image
                     src="/logo.png"

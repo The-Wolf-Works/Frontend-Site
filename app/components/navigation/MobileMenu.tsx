@@ -25,7 +25,7 @@ export const MobileMenu = ({ menuItems }: MobileMenuProps) => {
 
             {/* Mobile Menu - shown/hidden based on isOpen state */}
             {isOpen && (
-                <ul className="absolute top-full left-0 w-full bg-white shadow-md">
+                <ul className="absolute top-full left-0 w-full bg-white shadow-md z-50">
                     {menuItems.map((item) => (
                         <li className="border-b border-gray-100" key={item.id}>
                             <Link
