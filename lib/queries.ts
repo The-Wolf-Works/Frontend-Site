@@ -41,10 +41,11 @@ export const GET_PRIMARY_MENU = gql`
     query GetPrimaryMenu {
         menuItems(where: {location: PRIMARY}) {
             nodes {
+                cssClasses
                 id
                 label
-                url
                 path
+                url
             }
         }
     }
