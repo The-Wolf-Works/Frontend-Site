@@ -25,7 +25,7 @@ export const Page = async ({ params }: PageProps) => {
     { uri: `/${slug}/` }
   )
 
-  const page = data.pageBy;
+  const page = data.nodeByUri;
 
   if (!page) {
     notFound();

@@ -24,7 +24,7 @@ export interface GetAllPagesResponse {
 }
 
 export interface GetPageBySlugResponse {
-    pageBy: SinglePage | null
+    nodeByUri: SinglePage | null
 }
 
 export interface MenuItem {
@@ -38,5 +38,24 @@ export interface MenuItem {
 export interface GetMenuResponse {
     menuItems: {
         nodes: MenuItem[]
+    }
+}
+
+export interface HomepageHero {
+    heroHeading: string;
+    heroSubheading: string;
+    heroStatement: {
+        firstLine: string;
+        secondLine: string;
+    }
+    ctaLabel: string;
+    ctaUrl: string;
+    secondaryNavLabel: string;
+    secondaryNavUrl: string;
+}
+
+export interface GetHomepageHeroResponse {
+    nodeByUri: {
+        homepageHero: HomepageHero
     }
 }

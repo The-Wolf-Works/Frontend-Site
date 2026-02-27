@@ -10,7 +10,7 @@ export const Navigation = async () => {
     const menuItems = data.menuItems.nodes
 
     return (
-        <div className="relative bg-white w-full p-6 nav:p-12 flex items-center justify-between">
+        <div className="relative bg-brand-secondary w-full p-6 nav:p-12 flex items-center justify-between shadow-xl/30 ">
             <Link href="/" className="shrink-0 text-xl font-bold text-gray-900">
                 <Image
                     src="/logo.png"
@@ -33,7 +33,7 @@ export const Navigation = async () => {
                     className={
                         item.cssClasses.includes("cta")
                             ? "font-extrabold text-lg tracking-wider bg-brand-primary text-white p-4 rounded-lg no-underline whitespace-nowrap"
-                            : "text-base font-medium tracking-wider uppercase text-gray-900 no-underline hover:text-gray-500 transition-colors duration-200 whitespace-nowrap"
+                            : "text-base font-medium tracking-wider uppercase text-gray-300 no-underline hover:text-gray-500 transition-colors duration-200 whitespace-nowrap"
                     }
                 >
                     {item.label}
