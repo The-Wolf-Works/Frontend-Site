@@ -2,6 +2,7 @@
 
 @theme {
     --breakpoint-nav: 1000px;
+    --breakpoint-wide: 1400px;
     --color-dark-mode: #fff;
     --color-brand-primary: #00535c;
     --color-brand-secondary: #263038;
