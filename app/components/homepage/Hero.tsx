@@ -30,13 +30,13 @@ export const Hero = ({ hero }: HeroProps) => {
                     <div className="flex sm:flex-row flex-col gap-4 items-start">
                         <Link
                             href={hero.ctaUrl}
-                            className="w-fit inline-block bg-brand-primary text-white text-sm font-semibold tracking-wider px-8 py-4 rounded-lg hover:opacity-90 transition-opacity duration-200 whitespace-nowrap"
+                            className="w-fit inline-block bg-brand-primary text-white text-base font-semibold tracking-wider px-8 py-4 rounded-lg hover:opacity-90 transition-opacity duration-200 whitespace-nowrap"
                         >
                             {hero.ctaLabel}
                         </Link>
                         <Link
                             href={hero.secondaryNavUrl}
-                            className="w-fit inline-block outline outline-2 outline-brand-secondary text-brand-secondary text-sm font-semibold tracking-wider px-8 py-4 rounded-lg hover:opacity-90 transition-opacity duration-200 whitespace-nowrap"
+                            className="w-fit inline-block outline outline-2 outline-brand-secondary text-brand-secondary text-base font-semibold tracking-wider px-8 py-4 rounded-lg hover:opacity-90 transition-opacity duration-200 whitespace-nowrap"
                         >
                             {hero.secondaryNavLabel}
                         </Link>
