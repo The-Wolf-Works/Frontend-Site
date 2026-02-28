@@ -38,13 +38,13 @@ export const Hero = ({ hero }: HeroProps) => {
                 <div className="flex sm:flex-row flex-col gap-4 items-start">
                     <Link
                         href={hero.ctaUrl}
-                        className="w-fit inline-block bg-brand-primary text-white text-base font-semibold tracking-wider px-8 py-4 rounded-lg hover:opacity-90 transition-opacity duration-200 whitespace-nowrap"
+                        className="w-fit inline-block outline outline-2 outline-brand-primary border-brand-primary bg-brand-primary text-black text-base font-semibold tracking-wider px-8 py-4 rounded-lg hover:bg-brand-secondary hover:border-white hover:outline-2 hover:outline-white hover:text-white transition-all duration-500 whitespace-nowrap"
                     >
                         {hero.ctaLabel}
                     </Link>
                     <Link
                         href={hero.secondaryNavUrl}
-                        className="w-fit inline-block outline outline-2 outline-white text-white text-base font-semibold tracking-wider px-8 py-4 rounded-lg hover:opacity-90 transition-opacity duration-200 whitespace-nowrap"
+                        className="w-fit inline-block outline outline-2 outline-white text-white text-base font-semibold tracking-wider px-8 py-4 rounded-lg hover:opacity-75 transition-all duration-500 whitespace-nowrap"
                     >
                         {hero.secondaryNavLabel}
                     </Link>

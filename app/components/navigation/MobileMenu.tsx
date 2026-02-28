@@ -32,7 +32,7 @@ export const MobileMenu = ({ menuItems }: MobileMenuProps) => {
                                 href={item.path}
                                 className={
                                     item.cssClasses.includes("cta")
-                                        ? "block py-4 px-6 text-lg font-extrabold tracking-widest bg-brand-primary text-white text-center"
+                                        ? "block py-4 px-6 text-lg font-extrabold tracking-widest bg-brand-primary text-black text-center"
                                         : "block py-4 px-6 text-base font-medium tracking-widest uppercase text-white hover:text-gray-500 transition-colors duration-200"
                                 }
                             >{item.label}</Link>
