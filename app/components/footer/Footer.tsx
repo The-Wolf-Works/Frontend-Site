@@ -5,7 +5,7 @@ import { FaInstagram, FaFacebook, FaLinkedin } from 'react-icons/fa'
 
 export const Footer = () => {
     return (
-        <div className="w-full bg-brand-primary px-8 py-6">
+        <div className="w-full bg-brand-secondary px-8 py-6">
             <div className="flex flex-col gap-4 nav:flex-row nav:items-center nav:justify-between">
                 <div className="flex flex-col gap-4">
                     <Link href="/">
