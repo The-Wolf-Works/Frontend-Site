@@ -32,8 +32,8 @@ export const Navigation = async () => {
                     href={item.path}
                     className={
                         item.cssClasses.includes("cta")
-                            ? "font-extrabold text-lg tracking-wider bg-brand-primary text-white p-4 rounded-lg no-underline whitespace-nowrap"
-                            : "text-base font-medium tracking-wider uppercase text-gray-300 no-underline hover:text-gray-500 transition-colors duration-200 whitespace-nowrap"
+                            ? "font-extrabold outline-2 outline-brand-primary text-lg tracking-wider bg-brand-primary text-black p-4 rounded-lg no-underline whitespace-nowrap hover:bg-brand-secondary hover:border-white hover:outline-2 hover:outline-white hover:text-white transition-all duration-500"
+                            : "text-base font-medium tracking-wider uppercase text-gray-300 no-underline hover:font-bold hover:text-brand-primary transition-colors duration-200 whitespace-nowrap"
                     }
                 >
                     {item.label}
