@@ -59,3 +59,27 @@ export interface GetHomepageHeroResponse {
         homepageHero: HomepageHero
     }
 }
+
+export interface HowItWorksStep {
+    title: string
+    excerpt: string
+    icon: string | null  // maps to IconName from icons.tsx
+}
+
+export interface HowItWorksSection {
+    steps: Array<{
+        step: HowItWorksStep
+    }>
+}
+
+export interface GetHomepageResponse {
+    nodeByUri: {
+        homepageHero: HomepageHero
+    }
+}
+
+export interface GetHowItWorksResponse {
+    nodeByUri: {
+        howItWorksBlock: HowItWorksSection
+    } | null
+}
