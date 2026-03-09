@@ -3,7 +3,7 @@ import { GET_HOMEPAGE } from '@/lib/queries';
 import type { GetHomepageHeroResponse } from '@/lib/types';
 import Hero from './components/homepage/Hero';
 
-export const Home = async () => {
+const Home = async () => {
     const data = await client.request<GetHomepageHeroResponse>(GET_HOMEPAGE)
     const hero = data.nodeByUri.homepageHero
 
