@@ -53,7 +53,7 @@ export const GET_PRIMARY_MENU = gql`
     }
 `
 export const GET_HOMEPAGE = gql`
-    query GetHomepageHero {
+    query GetHomepage {
         nodeByUri(uri: "/home/") {
             ... on Page {
                 homepageHero {
@@ -67,6 +67,24 @@ export const GET_HOMEPAGE = gql`
                     ctaUrl
                     secondaryNavLabel
                     secondaryNavUrl
+                }
+            }
+        }
+    }
+`
+
+export const GET_HOW_IT_WORKS = gql`
+    query GetHowItWorksBlock {
+        nodeByUri(uri: "/blocks/how-it-works/") {
+            ... on Block {
+                howItWorksBlock {
+                    steps {
+                        step {
+                            title
+                            excerpt
+                            icon
+                        }
+                    }
                 }
             }
         }
