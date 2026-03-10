@@ -2,16 +2,16 @@ import { icons, type IconName } from '@/app/components/icons/Icons'
 import type { HowItWorksSection } from '@/lib/types'
 
 interface HowItWorksProps {
-    howItWorks: HowItWorksSection
+    block: HowItWorksSection
 }
 
-export const HowItWorks = ({ howItWorks }: HowItWorksProps) => {
+export const HowItWorks = ({ block }: HowItWorksProps) => {
     return (
         <>
             <style>{`
                 @media (min-width: 1000px) {
                     .steps-grid {
-                        grid-template-columns: repeat(${howItWorks.steps.length}, minmax(0, 1fr));
+                        grid-template-columns: repeat(${block.steps.length}, minmax(0, 1fr));
                     }
                 }
             `}</style>
@@ -32,7 +32,7 @@ export const HowItWorks = ({ howItWorks }: HowItWorksProps) => {
 
                 {/* Step cards */}
                 <div className="steps-grid grid grid-cols-1 gap-4 min-h-0">
-                    {howItWorks.steps.map(({ step }, index) => {
+                    {block.steps.map(({ step }, index) => {
                         const Icon = step.icon ? icons[step.icon as IconName] : null
                         const stepNumber = String(index + 1).padStart(2, '0')
 

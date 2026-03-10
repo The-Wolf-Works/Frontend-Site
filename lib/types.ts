@@ -1,3 +1,4 @@
+// Featured Image
 export interface FeaturedImage {
     node: {
         sourceUrl: string
@@ -5,6 +6,7 @@ export interface FeaturedImage {
     }
 }
 
+// Page
 export interface Page {
     id: string;
     title: string
@@ -12,21 +14,21 @@ export interface Page {
     date: string
     featuredImage: FeaturedImage | null
 }
-
 export interface SinglePage extends Page {
     content: string
 }
 
+// Pages
 export interface GetAllPagesResponse {
     pages: {
         nodes: Page[]
     }
 }
-
 export interface GetPageBySlugResponse {
     nodeByUri: SinglePage | null
 }
 
+// Menu
 export interface MenuItem {
     cssClasses: string[];
     id: string;
@@ -34,13 +36,13 @@ export interface MenuItem {
     path: string;
     url: string;
 }
-
 export interface GetMenuResponse {
     menuItems: {
         nodes: MenuItem[]
     }
 }
 
+// Homepage Hero
 export interface HomepageHero {
     heroHeading: string;
     heroSubheading: string;
@@ -53,13 +55,18 @@ export interface HomepageHero {
     secondaryNavLabel: string;
     secondaryNavUrl: string;
 }
-
 export interface GetHomepageHeroResponse {
     nodeByUri: {
         homepageHero: HomepageHero
     }
 }
+export interface GetHomepageResponse {
+    nodeByUri: {
+        homepageHero: HomepageHero
+    }
+}
 
+// How It Works Block
 export interface HowItWorksStep {
     title: string
     excerpt: string
@@ -71,15 +78,27 @@ export interface HowItWorksSection {
         step: HowItWorksStep
     }>
 }
-
-export interface GetHomepageResponse {
-    nodeByUri: {
-        homepageHero: HomepageHero
-    }
-}
-
 export interface GetHowItWorksResponse {
     nodeByUri: {
         howItWorksBlock: HowItWorksSection
+    } | null
+}
+
+// Why The Wolf Works Block
+export interface WhyTheWolfWorksBlock {
+    heading: string;
+    subHeading: string;
+    content: string;
+    tagline: string;
+    image: {
+        node: {
+            sourceUrl: string;
+            altText: string;
+        }
+    }
+}
+export interface GetWhyTheWolfWorksResponse {
+    nodeByUri: {
+        whyTheWolfWorksBlock: WhyTheWolfWorksBlock
     } | null
 }
