@@ -16,6 +16,12 @@ export const Hero = ({ hero }: HeroProps) => {
                     background: "linear-gradient(to right, #263038 30%, rgba(38,48,56,0.6) 60%, rgba(38,48,56,0.1) 100%)"
                 }}
             />
+
+            {/* Bottom fade — blends into HowItWorks section */}
+            <div
+                className="absolute inset-x-0 bottom-0 h-48 z-20 pointer-events-none"
+                style={{ background: "linear-gradient(to bottom, transparent, #263038)" }}
+            />
             <HeroBackground />
 
             {/* Content */}
