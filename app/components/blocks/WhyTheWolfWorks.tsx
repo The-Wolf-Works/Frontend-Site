@@ -21,9 +21,9 @@ export const WhyTheWolfWorks = ({ block }: WhyTheWolfWorksProps) => {
 
                 {/* Heading */}
                 <h2 className="text-4xl nav:text-5xl font-extrabold text-white leading-[1.05]">
-                    <span className="text-brand-primary">Why</span>
-                    <br />The Wolf<br />
-                    <span className="text-brand-primary">Works</span>
+                    <span className="text-sm font-medium tracking-widest uppercase text-brand-primary mb-3">Why</span>
+                    <br />The Wolf
+                    <span className="text-brand-primary"> Works</span>
                 </h2>
 
                 {/* Accent line */}
