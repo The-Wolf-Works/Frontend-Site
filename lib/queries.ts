@@ -90,5 +90,22 @@ export const GET_HOW_IT_WORKS = gql`
         }
     }
 `
-
-
+export const GET_WHY_THE_WOLF_WORKS = gql`
+    query GetWhyTheWolfWorksBlock {
+        nodeByUri(uri: "/blocks/why-the-wolf-works/") {
+            ... on Block {
+                whyTheWolfWorksBlock {
+                    subHeading
+                    content
+                    tagline
+                    image {
+                        node {
+                            sourceUrl
+                            altText
+                        }
+                    }
+                }
+            }
+        }
+    }
+`
