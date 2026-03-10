@@ -102,3 +102,27 @@ export interface GetWhyTheWolfWorksResponse {
         whyTheWolfWorksBlock: WhyTheWolfWorksBlock
     } | null
 }
+
+// About The Wolf Pack
+export interface AboutTheWolfPackBlock {
+    members: Array<{
+        member: {
+            name: string;
+            roles: Array<{
+                role: string;
+            }>;
+            bio: string;
+            photo: {
+                node: {
+                    sourceUrl: string;
+                    altText: string;
+                }
+            }
+        }
+    }>
+}
+export interface GetAboutTheWolfPackResponse {
+    nodeByUri: {
+        wolfPackBlock: AboutTheWolfPackBlock
+    } | null
+}

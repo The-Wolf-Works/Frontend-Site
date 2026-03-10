@@ -109,3 +109,29 @@ export const GET_WHY_THE_WOLF_WORKS = gql`
         }
     }
 `
+
+export const GET_ABOUT_THE_WOLF_PACK = gql`
+    query GetAboutTheWolfPackBlock {
+    nodeByUri(uri: "/blocks/about-the-wolf-pack/") {
+        ... on Block {
+        wolfPackBlock {
+            members {
+            member {
+                name
+                roles {
+                role
+                }
+                bio
+                photo {
+                node {
+                    sourceUrl
+                    altText
+                }
+                }
+            }
+            }
+        }
+        }
+    }
+    }
+`
