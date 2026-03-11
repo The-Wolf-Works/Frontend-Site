@@ -17,7 +17,8 @@ export const HowItWorks = ({ block }: HowItWorksProps) => {
             `}</style>
 
             <section
-                className="bg-brand-secondary px-8 nav:px-20 py-12 grid gap-6 nav:h-[calc(100vh-var(--nav-height))]"
+                className="bg-brand-secondary border-t border-white/5 px-8 nav:px-20 py-12 pb-0 grid gap-6 nav:h-[calc(100vh-var(--nav-height))] scroll-mt-[var(--nav-height)]"
+                id="how-it-works"
                 style={{ gridTemplateRows: 'auto 1fr' }}
             >
                 {/* Heading */}
