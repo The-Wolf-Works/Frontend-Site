@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import type { AboutTheWolfPackBlock } from '@/lib/types'
-import { section } from 'framer-motion/client'
 
 interface WolfPackProps {
     block: AboutTheWolfPackBlock
@@ -8,10 +7,13 @@ interface WolfPackProps {
 
 export const AboutTheWolfPack = ({ block }: WolfPackProps) => {
     return (
-        <section className="bg-brand-secondary px-8 nav:px-20 py-16">
+        <section
+            className="bg-brand-secondary border-t border-white/5 px-8 nav:px-20 py-12 nav:h-[calc(100vh-var(--nav-height))] nav:flex nav:flex-col nav:justify-center scroll-mt-[var(--nav-height)]"
+            id="about-us"
+        >
 
             {/* Heading */}
-            <div className="mb-12">
+            <div className="mb-8">
                 <p className="text-sm font-medium tracking-widest uppercase text-brand-primary mb-3">
                     Team
                 </p>

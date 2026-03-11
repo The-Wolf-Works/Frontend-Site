@@ -126,3 +126,26 @@ export interface GetAboutTheWolfPackResponse {
         wolfPackBlock: AboutTheWolfPackBlock
     } | null
 }
+
+// Pricing Guide Block
+export interface PricingGuideBlock {
+    plans: Array<{
+        plan: {
+            title: string;
+            description: string;
+            price: string;
+            primaryFeature: string;
+            features: Array<{
+                feature: string;
+            }>;
+            ctaLabel: string;
+            bestFor: string;
+            featured: boolean;
+        }
+    }>;
+}
+export interface GetPricingGuideResponse {
+    nodeByUri: {
+        pricingGuideBlock: PricingGuideBlock
+    } | null
+}

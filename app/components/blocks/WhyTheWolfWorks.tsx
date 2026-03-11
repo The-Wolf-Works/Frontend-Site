@@ -9,10 +9,10 @@ export const WhyTheWolfWorks = ({ block }: WhyTheWolfWorksProps) => {
     const taglineParts = block.tagline?.split('·').map(s => s.trim()).filter(Boolean) ?? []
 
     return (
-        <section className="bg-brand-secondary grid nav:grid-cols-[55fr_45fr]">
+        <section className="bg-brand-secondary border-t border-white/5 grid nav:grid-cols-[55fr_45fr] nav:h-[calc(100vh-var(--nav-height))]">
 
             {/* Left — text */}
-            <div className="flex flex-col justify-center px-8 nav:px-20 py-16 gap-6 border-r border-white/5">
+            <div className="flex flex-col justify-center px-8 nav:px-20 py-12 gap-6 border-r border-white/5">
 
                 {/* Eyebrow */}
                 <p className="text-sm font-medium tracking-widest uppercase text-brand-primary">
@@ -52,7 +52,7 @@ export const WhyTheWolfWorks = ({ block }: WhyTheWolfWorksProps) => {
 
             {/* Right — wolf with radial gradient glow */}
             <div
-                className="relative flex items-center justify-center min-h-[500px]"
+                className="relative flex items-center justify-center min-h-[380px]"
                 style={{ background: 'radial-gradient(circle at center, rgba(94,252,141,0.07) 0%, rgba(38,48,56,0.5) 60%, #263038 100%)' }}
             >
                 {block.image?.node?.sourceUrl && (
@@ -60,7 +60,7 @@ export const WhyTheWolfWorks = ({ block }: WhyTheWolfWorksProps) => {
                         src={block.image.node.sourceUrl}
                         alt={block.image.node.altText || 'The Wolf Works'}
                         fill
-                        className="object-contain p-16"
+                        className="object-contain p-10"
                         style={{ filter: 'brightness(0) invert(1)' }}
                     />
                 )}

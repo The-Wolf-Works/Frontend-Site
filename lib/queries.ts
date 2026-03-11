@@ -1,5 +1,6 @@
 import { gql } from 'graphql-request'
 
+// All pages
 export const GET_ALL_PAGES = gql`
   query GetAllPages {
     pages {
@@ -19,6 +20,7 @@ export const GET_ALL_PAGES = gql`
   }
 `
 
+// Page by slug
 export const GET_PAGE_BY_SLUG = gql`
     query GetPageBySlug($uri: String!) {
         nodeByUri(uri: $uri) {
@@ -39,6 +41,7 @@ export const GET_PAGE_BY_SLUG = gql`
     }
 `
 
+// Primary menu
 export const GET_PRIMARY_MENU = gql`
     query GetPrimaryMenu {
         menuItems(where: {location: PRIMARY}) {
@@ -52,6 +55,8 @@ export const GET_PRIMARY_MENU = gql`
         }
     }
 `
+
+// Homepage block
 export const GET_HOMEPAGE = gql`
     query GetHomepage {
         nodeByUri(uri: "/home/") {
@@ -72,7 +77,7 @@ export const GET_HOMEPAGE = gql`
         }
     }
 `
-
+// How it works block
 export const GET_HOW_IT_WORKS = gql`
     query GetHowItWorksBlock {
         nodeByUri(uri: "/blocks/how-it-works/") {
@@ -90,6 +95,7 @@ export const GET_HOW_IT_WORKS = gql`
         }
     }
 `
+// Why the Wolf Works block
 export const GET_WHY_THE_WOLF_WORKS = gql`
     query GetWhyTheWolfWorksBlock {
         nodeByUri(uri: "/blocks/why-the-wolf-works/") {
@@ -110,28 +116,55 @@ export const GET_WHY_THE_WOLF_WORKS = gql`
     }
 `
 
+// About the Wolf Pack block
 export const GET_ABOUT_THE_WOLF_PACK = gql`
     query GetAboutTheWolfPackBlock {
-    nodeByUri(uri: "/blocks/about-the-wolf-pack/") {
-        ... on Block {
-        wolfPackBlock {
-            members {
-            member {
-                name
-                roles {
-                role
-                }
-                bio
-                photo {
-                node {
-                    sourceUrl
-                    altText
-                }
+        nodeByUri(uri: "/blocks/about-the-wolf-pack/") {
+            ... on Block {
+                wolfPackBlock {
+                    members {
+                        member {
+                            name
+                            roles {
+                            role
+                            }
+                            bio
+                            photo {
+                                node {
+                                    sourceUrl
+                                    altText
+                                }
+                            }
+                        }
+                    }
                 }
             }
-            }
-        }
         }
     }
+`
+
+// Pricing Guide block
+export const GET_PRICING_GUIDE = gql`
+    query GetPricingGuideBlock {
+        nodeByUri(uri: "/blocks/pricing-guide/") {
+            ... on Block {
+                pricingGuideBlock {
+                    plans {
+                        plan {
+                            title
+                            description
+                            price
+                            primaryFeature
+                            features {
+                                feature
+                            }
+                            ctaLabel
+                            bestFor
+                            featured
+                        }
+                    }
+                }
+            }
+        }
     }
 `
