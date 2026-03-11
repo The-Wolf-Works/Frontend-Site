@@ -1,5 +1,6 @@
 import { CheckIcon } from '@heroicons/react/24/outline'
 import type { PricingGuideBlock } from '@/lib/types'
+import ModalButton from "@/app/components/modal/ModalButton"
 
 interface PricingGuideProps {
     block: PricingGuideBlock
@@ -90,7 +91,9 @@ export const PricingGuide = ({ block }: PricingGuideProps) => {
 
                         {/* CTA + Best for */}
                         <div className={`px-7 pb-7 pt-4 flex flex-col gap-5 border-t ${plan.featured ? 'border-brand-primary/20' : 'border-white/10'}`}>
-                            <button
+                            <ModalButton
+                                modalId={plan.modalTrigger}
+                                data={{ plan: plan.title }}
                                 className={`w-full py-3.5 rounded-full font-bold text-sm tracking-wider transition-all duration-500 cursor-pointer ${
                                     plan.featured
                                         ? 'bg-brand-primary text-black hover:bg-white'
@@ -98,7 +101,7 @@ export const PricingGuide = ({ block }: PricingGuideProps) => {
                                 }`}
                             >
                                 {plan.ctaLabel}
-                            </button>
+                            </ModalButton>
 
                             <div>
                                 <p className="text-xs font-bold tracking-widest uppercase text-brand-primary mb-1.5">

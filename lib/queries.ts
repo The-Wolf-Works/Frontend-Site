@@ -158,7 +158,10 @@ export const GET_PRICING_GUIDE = gql`
                             features {
                                 feature
                             }
+                            openModal
                             ctaLabel
+                            modalTrigger
+                            ctaUrl
                             bestFor
                             featured
                         }

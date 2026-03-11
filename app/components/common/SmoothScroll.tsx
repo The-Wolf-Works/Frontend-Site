@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import Lenis from 'lenis'
+import { setLenis } from '@/app/lib/lenis'
 
 export const SmoothScroll = () => {
     useEffect(() => {
@@ -9,6 +10,7 @@ export const SmoothScroll = () => {
             duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         })
+        setLenis(lenis)
 
         const handleAnchorClick = (e: MouseEvent) => {
             const anchor = (e.target as HTMLElement).closest('a')
