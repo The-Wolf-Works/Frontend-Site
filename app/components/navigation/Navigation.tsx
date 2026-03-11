@@ -4,6 +4,7 @@ import MobileMenu from "./MobileMenu"
 import type { GetMenuResponse } from "@/lib/types"
 import Link from "next/link"
 import Image from 'next/image'
+import ModalButton from "@/app/components/modal/ModalButton"
 
 export const Navigation = async () => {
     const data = await client.request<GetMenuResponse>(GET_PRIMARY_MENU)
@@ -28,16 +29,25 @@ export const Navigation = async () => {
                     key={item.id}
                     className={`list-none`}
                 >
-                <Link
-                    href={item.path}
-                    className={
-                        item.cssClasses.includes("cta")
-                            ? "font-extrabold outline-2 outline-brand-primary text-lg tracking-wider bg-brand-primary text-black p-4 rounded-lg no-underline whitespace-nowrap hover:bg-brand-secondary hover:border-white hover:outline-2 hover:outline-white hover:text-white transition-all duration-500"
-                            : "text-base font-medium tracking-wider uppercase text-gray-300 no-underline hover:font-bold hover:text-brand-primary transition-colors duration-200 whitespace-nowrap"
-                    }
-                >
-                    {item.label}
-                </Link>
+                {item.cssClasses.includes("modal-trigger") ? (
+                    <ModalButton
+                        modalId="contact"
+                        className="text-base font-medium tracking-wider uppercase text-gray-300 hover:font-bold hover:text-brand-primary transition-colors duration-200 whitespace-nowrap cursor-pointer"
+                    >
+                        {item.label}
+                    </ModalButton>
+                ) : (
+                    <Link
+                        href={item.path}
+                        className={
+                            item.cssClasses.includes("cta")
+                                ? "font-extrabold outline-2 outline-brand-primary text-lg tracking-wider bg-brand-primary text-black p-4 rounded-lg no-underline whitespace-nowrap hover:bg-brand-secondary hover:outline-white hover:text-white transition-all duration-500"
+                                : "text-base font-medium tracking-wider uppercase text-gray-300 no-underline hover:font-bold hover:text-brand-primary transition-colors duration-200 whitespace-nowrap"
+                        }
+                    >
+                        {item.label}
+                    </Link>
+                )}
                 </li>
             ))}
             </ul>

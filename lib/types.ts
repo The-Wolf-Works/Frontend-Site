@@ -138,7 +138,10 @@ export interface PricingGuideBlock {
             features: Array<{
                 feature: string;
             }>;
+            openModal: boolean;
             ctaLabel: string;
+            modalTrigger: string;
+            ctaUrl: string;
             bestFor: string;
             featured: boolean;
         }

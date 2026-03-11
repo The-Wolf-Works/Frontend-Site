@@ -4,6 +4,8 @@ import "./globals.css"
 import Navigation from '@/app/components/navigation/Navigation'
 import Footer from '@/app/components/footer/Footer'
 import SmoothScroll from '@/app/components/common/SmoothScroll'
+import ModalProvider from "./components/modal/ModalProvider"
+import { Suspense } from "react"
 
 const inter = Inter({
     subsets: ["latin"],
@@ -42,11 +44,15 @@ export default function RootLayout({
         className={`${inter.className} antialiased min-h-screen flex flex-col`}
       >
         <SmoothScroll />
-        <Navigation />
-        <main className="flex-1 flex flex-col">
-            {children}
-        </main>
-        <Footer />
+        <Suspense>
+            <ModalProvider>
+                <Navigation />
+                <main className="flex-1 flex flex-col">
+                    {children}
+                </main>
+                <Footer />
+            </ModalProvider>
+        </Suspense>
       </body>
     </html>
   )

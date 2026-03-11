@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect } from "react";
+import { useEffect } from "react"
+import { getLenis } from '@/app/lib/lenis'
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 interface ModalShellProps {
@@ -19,10 +20,11 @@ export const ModalShell = ({ onClose, children }: ModalShellProps) => {
         return () => document.removeEventListener('keydown', handleKeyDown)
     }, [onClose])
 
-    // Prevent body scroll when modal is open
+    // Stop Lenis scroll when modal is open, resume on close
     useEffect(() => {
-        document.body.style.overflow = 'hidden'
-        return () => { document.body.style.overflow = '' }
+        const lenis = getLenis()
+        lenis?.stop()
+        return () => lenis?.start()
     }, [])
 
       return (

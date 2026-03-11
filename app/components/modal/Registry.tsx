@@ -1,18 +1,29 @@
-import type { ModalObject } from "./ModalProvider"
-
-interface ModalContentProps {
-    data: ModalObject
-}
+import type { ModalContentProps } from "./Types"
 
 type ModalContentComponent = (props: ModalContentProps) => React.ReactNode
 
 export const modalRegistry: Record<string, ModalContentComponent> = {
-    // Placeholder - replace with real modal content components as they're built
-    'website-review': ({ data }) => (
+
+    'contact': () => (
         <div>
-            <h2 className="text-xl font-extrabold text-white mb-2">Website Review</h2>
-            <p className="text-white/60 text-sm">Plan: {data.plan}</p>
+            <h2 className="text-xl font-extrabold text-white mb-2">Get in touch</h2>
+            <p className="text-white/60 text-sm">Contact form coming soon.</p>
         </div>
     ),
+    'website-review': ({ data }) => (
+        <div>
+            <h2 className="text-xl font-extrabold text-white mb-2">{data.plan}</h2>
+        </div>
+    ),
+    'business-review': ({ data }) => (
+        <div>
+            <h2 className="text-xl font-extrabold text-white mb-2">{data.plan}</h2>
+        </div>
+    ),
+    'consultancy': ({ data }) => (
+        <div>
+            <h2 className="text-xl font-extrabold text-white mb-2">{data.plan}</h2>
+        </div>
+    )
 }
 export default modalRegistry

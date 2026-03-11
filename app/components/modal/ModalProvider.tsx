@@ -1,19 +1,10 @@
 'use client'
 
-import { createContext, useCallback } from 'react'
+import { createContext, useCallback, useState, useEffect, startTransition } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import ModalShell from './ModalShell'
 import { modalRegistry } from './Registry'
-
-export interface ModalObject {
-    id: string
-    [key: string]: string | undefined
-}
-
-interface ModalContextType {
-    openModal: (id: string, data?: Omit<ModalObject, 'id'>) => void
-    closeModal: () => void
-}
+import { ModalContextType, ModalObject } from './Types'
 
 export const ModalContext = createContext<ModalContextType | null>(null)
 
@@ -21,29 +12,43 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter()
     const searchParams = useSearchParams()
 
-    // Derive modal state by parsing the single modal param as a JSON object
-    const rawModal = searchParams.get('modal')
-    const modalObj: ModalObject | null = (() => {
-        if (!rawModal) return null
-        try { return JSON.parse(rawModal) } catch { return null }
-    })()
-    const modalId = modalObj?.id ?? null
+    // React state drives rendering — immediate, no router delay
+    const [modalObj, setModalObj] = useState<ModalObject | null>(null)
 
-    // Open a modal — serialise id + data as one JSON object in the URL
+    // Initialise from URL on mount only (e.g. direct link with ?modal=...)
+    useEffect(() => {
+        const rawModal = searchParams.get('modal')
+        if (rawModal) {
+            startTransition(() => {
+                try { setModalObj(JSON.parse(rawModal)) } catch { }
+            })
+        }
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Open modal — update state immediately, sync URL in background
     const openModal = useCallback((id: string, data?: Omit<ModalObject, 'id'>) => {
-        const params = new URLSearchParams(searchParams.toString())
-        params.set('modal', JSON.stringify({ id, ...data }))
-        router.replace(`?${params.toString()}`)
+        const obj = { id, ...data }
+        setModalObj(obj)
+        startTransition(() => {
+            const params = new URLSearchParams(searchParams.toString())
+            params.delete('modal')
+            const rest = params.toString()
+            router.replace(`?${rest ? `${rest}&` : ''}modal=${JSON.stringify(obj)}`, { scroll: false })
+        })
     }, [router, searchParams])
 
-    // Close modal — delete the single modal param
+    // Close modal — update state immediately, sync URL in background
     const closeModal = useCallback(() => {
-        const params = new URLSearchParams(searchParams.toString())
-        params.delete('modal')
-        router.replace(`?${params.toString()}`)
+        setModalObj(null)
+        startTransition(() => {
+            const params = new URLSearchParams(searchParams.toString())
+            params.delete('modal')
+            const rest = params.toString()
+            router.replace(rest ? `?${rest}` : window.location.pathname, { scroll: false })
+        })
     }, [router, searchParams])
 
-    // Get modal component from registry
+    const modalId = modalObj?.id ?? null
     const ModalContent = modalId ? modalRegistry[modalId] : null
 
     return (
@@ -51,7 +56,7 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
             {children}
             {modalId && ModalContent && (
                 <ModalShell onClose={closeModal}>
-                    <ModalContent data={modalObj} />
+                    <ModalContent data={modalObj as ModalObject} />
                 </ModalShell>
             )}
         </ModalContext.Provider>
