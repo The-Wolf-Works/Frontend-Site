@@ -1,29 +1,24 @@
 import type { ModalContentProps } from "./Types"
+import ContactForm from "../forms/ContactForm"
+import WebsiteReview from "../forms/WebsiteReview"
+import BusinessReview from "../forms/BusinessReview"
+import Consultancy from "../forms/Consultancy"
 
 type ModalContentComponent = (props: ModalContentProps) => React.ReactNode
 
 export const modalRegistry: Record<string, ModalContentComponent> = {
 
     'contact': () => (
-        <div>
-            <h2 className="text-xl font-extrabold text-white mb-2">Get in touch</h2>
-            <p className="text-white/60 text-sm">Contact form coming soon.</p>
-        </div>
+        <ContactForm />
     ),
     'website-review': ({ data }) => (
-        <div>
-            <h2 className="text-xl font-extrabold text-white mb-2">{data.plan}</h2>
-        </div>
+        <WebsiteReview planName={data.plan ?? ''} />
     ),
     'business-review': ({ data }) => (
-        <div>
-            <h2 className="text-xl font-extrabold text-white mb-2">{data.plan}</h2>
-        </div>
+        <BusinessReview planName={data.plan ?? ''} />
     ),
     'consultancy': ({ data }) => (
-        <div>
-            <h2 className="text-xl font-extrabold text-white mb-2">{data.plan}</h2>
-        </div>
+        <Consultancy planName={data.plan ?? ''} />
     )
 }
 export default modalRegistry
