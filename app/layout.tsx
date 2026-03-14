@@ -6,6 +6,7 @@ import Footer from '@/app/components/footer/Footer'
 import SmoothScroll from '@/app/components/common/SmoothScroll'
 import ModalProvider from "./components/modal/ModalProvider"
 import { Suspense } from "react"
+import RecaptchaProvider from "./components/providers/RecaptchaProvider"
 
 const inter = Inter({
     subsets: ["latin"],
@@ -45,13 +46,15 @@ export default function RootLayout({
       >
         <SmoothScroll />
         <Suspense>
-            <ModalProvider>
-                <Navigation />
-                <main className="flex-1 flex flex-col">
-                    {children}
-                </main>
-                <Footer />
-            </ModalProvider>
+            <RecaptchaProvider>
+                <ModalProvider>
+                    <Navigation />
+                    <main className="flex-1 flex flex-col">
+                        {children}
+                    </main>
+                    <Footer />
+                </ModalProvider>
+            </RecaptchaProvider>
         </Suspense>
       </body>
     </html>
