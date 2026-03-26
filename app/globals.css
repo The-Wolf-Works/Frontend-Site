@@ -12,3 +12,6 @@
 
 /* Frosted Blue = #8EDCE6 */
 
+.grecaptcha-badge {
+    z-index: 9999 !important;
+}
