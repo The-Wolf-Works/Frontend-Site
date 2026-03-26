@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ServerClient } from 'postmark'
+import { render } from '@react-email/render'
 import { client } from '@/lib/client'
 import { GET_EMAIL_TEMPLATES } from '@/lib/queries'
+import WPEmailTemplate from '@/app/emails/WPEmailTemplate'
 
 const postmark = new ServerClient(process.env.POSTMARK_API_KEY!)
 
@@ -108,15 +110,18 @@ export const POST = async (req: NextRequest) => {
 
     // Send emails using Postmark
     await Promise.all(
-        formTemplates.map(tpl => {
+        formTemplates.map(async tpl => {
             const emailType = tpl.emailTemplates.emailType[0]
             const { stream, from } = streamMap[emailType]
             const to = emailType === 'admin' ? process.env.POSTMARK_ADMIN_EMAIL! : formData.sender_email
+            const body = replacePlaceholders(tpl.emailTemplates.bodyContent, vars)
+            const subject = replacePlaceholders(tpl.emailTemplates.subject, vars)
+            const html = await render(<WPEmailTemplate bodyContent={body} previewText={subject} />)
             return postmark.sendEmail({
                 From: from,
                 To: to,
-                Subject: replacePlaceholders(tpl.emailTemplates.subject, vars),
-                HtmlBody: replacePlaceholders(tpl.emailTemplates.bodyContent, vars),
+                Subject: subject,
+                HtmlBody: html,
                 MessageStream: stream
             })
         })

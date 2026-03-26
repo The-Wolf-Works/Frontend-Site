@@ -11,6 +11,7 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@react-email/components": "^1.0.9",
+    "@react-email/render": "^2.0.4",
     "@tailwindcss/typography": "^0.5.19",
     "framer-motion": "^12.34.3",
     "graphql": "^16.12.0",
@@ -25,6 +26,7 @@
     "react-icons": "^5.5.0"
   },
   "devDependencies": {
+    "@react-email/preview-server": "^5.2.9",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
