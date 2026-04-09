@@ -152,3 +152,25 @@ export interface GetPricingGuideResponse {
         pricingGuideBlock: PricingGuideBlock
     } | null
 }
+
+// Testimonial
+export interface Testimonial {
+    quote: string
+    clientName: string
+    role: string
+    company: string
+    photo: {
+        node: {
+            sourceUrl: string
+            altText: string
+        }
+    } | null
+}
+
+export interface GetTestimonialsResponse {
+    testimonials: {
+        nodes: Array<{
+            testimonials: Testimonial
+        }>
+    }
+}

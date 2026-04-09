@@ -189,3 +189,27 @@ export const GET_EMAIL_TEMPLATES = gql`
         }
     }
 `
+
+// Testimonials
+export const GET_TESTIMONIALS = gql`
+    query GetTestimonials {
+        testimonials {
+            nodes {
+                slug
+                title
+                testimonials {
+                    quote
+                    clientName
+                    jobTitle
+                    company
+                    photo {
+                        node {
+                            sourceUrl
+                            altText
+                        }
+                    }
+                }
+            }
+        }
+    }
+`
