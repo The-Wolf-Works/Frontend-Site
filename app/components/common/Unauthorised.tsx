@@ -11,7 +11,7 @@ const Unauthorised = () => {
                 </div>
                 <h1 className="text-2xl font-extrabold text-white mb-3">Access Required</h1>
                 <p className="text-white/50 text-sm leading-relaxed">
-                    This area is restricted. Please use the access link provided to you to continue.
+                    This area is restricted.
                 </p>
             </div>
         </div>
