@@ -4,7 +4,8 @@ import {
     ClockIcon,
     MagnifyingGlassIcon,
     LightBulbIcon,
-    RocketLaunchIcon
+    RocketLaunchIcon,
+    LockClosedIcon
 } from '@heroicons/react/24/outline'
 
 export const icons = {
@@ -13,7 +14,8 @@ export const icons = {
     clock: ClockIcon,
     magnifyingGlass: MagnifyingGlassIcon,
     lightBulb: LightBulbIcon,
-    rocketLaunch: RocketLaunchIcon
+    rocketLaunch: RocketLaunchIcon,
+    lockClosed: LockClosedIcon
 } as const
 
 export type IconName = keyof typeof icons
