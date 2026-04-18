@@ -1,0 +1,88 @@
+'use client'
+
+import { useState } from 'react'
+import { AiReportPrompt, ReportFormData } from '@/lib/types'
+import StepForm from './StepForm'
+import StepGenerate from './StepGenerate'
+
+interface Props {
+    prompts: AiReportPrompt[]
+}
+
+const STEPS = [
+    { number: 1, label: 'Details' },
+    { number: 2, label: 'Preview' },
+    { number: 3, label: 'Finalise' }
+] as const
+
+/**
+ * Step indicator component
+ * @param param current - Current step number
+ * @returns Step indicator
+ */
+const StepIndicator = ({ current }: { current: 1 | 2 | 3 }) => (
+    <div className="flex items-center gap-2 mb-8">
+        {STEPS.map(({ number, label }) => (
+            <div key={number} className="flex items-center gap-2">
+                <div className="flex flex-col items-center gap-1">
+                    <div
+                        className={
+                            `w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${current === number ? 'bg-brand-primary text-brand-secondary' : current > number ? 'bg-brand-primary/20 text-brand-primary' : 'bg-white/10 text-white/30'}`
+                        }
+                    >
+                        {number}
+                    </div>
+                    <span className={
+                        `text-xs transition-colors ${current === number ? 'text-white' : current > number ? 'text-white/40' : 'text-white/20'}`
+                    }>
+                        {label}
+                    </span>
+                </div>
+                {number < STEPS.length && (
+                    <div className={
+                        `h-px w-12 mb-4 transition-colors ${current > number ? 'bg-brand-primary/40' : 'bg-white/10'}`
+                    } />
+                )}
+            </div>
+        ))}
+    </div>
+)
+
+
+const ReportWizard = ({ prompts }: Props) => {
+    const [step, setStep] = useState<1 | 2 | 3>(1)
+    const [formData, setFormData] = useState<ReportFormData | null>(null)
+    const [content, setContent] = useState<string>('')
+
+    const handleFormSubmit = (data: Omit<ReportFormData, 'uuid'>) => {
+        setFormData({
+            ...data,
+            uuid: crypto.randomUUID()
+        })
+        setStep(2)
+    }
+
+    return (
+        <div>
+            <StepIndicator current={step} />
+            {step === 1 && (
+                <StepForm
+                    prompts={prompts}
+                    initialData={formData}
+                    onSubmit={handleFormSubmit}
+                />
+            )}
+            {step === 2 && formData && (
+                <StepGenerate
+                    formData={formData}
+                    initialContent={content}
+                    onContentChange={setContent}
+                    onBack={() => setStep(1)}
+                    onNext={() => setStep(3)}
+                />
+            )}
+        </div>
+    )
+}
+
+export default ReportWizard

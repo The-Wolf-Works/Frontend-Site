@@ -4,6 +4,7 @@ import { render } from '@react-email/render'
 import { client } from '@/lib/client'
 import { GET_EMAIL_TEMPLATES } from '@/lib/queries'
 import WPEmailTemplate from '@/app/emails/WPEmailTemplate'
+import { replacePlaceholders } from '@/app/utils/stringReplacement'
 
 const postmark = new ServerClient(process.env.POSTMARK_API_KEY!)
 
@@ -21,14 +22,6 @@ interface EmailTemplateResponse {
     emailTemplates: {
         nodes: EmailTemplates[]
     }
-}
-
-// Replace placeholders in text with values from vars
-const replacePlaceholders = (text: string, vars: Record<string, string>): string => {
-    return Object.entries(vars).reduce(
-        (str, [key, value]) => str.replaceAll(`{${key}}`, value),
-        text
-    )
 }
 
 // Verify reCAPTCHA token via Google's reCAPTCHA API

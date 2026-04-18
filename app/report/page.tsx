@@ -1,0 +1,23 @@
+import { client } from '@/lib/client'
+import { GET_AI_REPORT_PROMPTS } from '@/lib/queries'
+import { GetAiReportPromptsResponse } from '@/lib/types'
+import ReportWizard from '@/app/components/report/ReportWizard'
+
+/**
+ * Report page component
+ * @returns Report page
+ */
+const ReportPage = async () => {
+    const data = await client.request<GetAiReportPromptsResponse>(GET_AI_REPORT_PROMPTS)
+    const prompts = data.aIReportPrompts?.nodes ?? []
+
+    return (
+        <div className="flex-1 flex flex-col items-center justify-center px-6 py-16">
+            <div className="w-full max-w-lg">
+                <ReportWizard prompts={prompts} />
+            </div>
+        </div>
+    )
+}
+
+export default ReportPage
