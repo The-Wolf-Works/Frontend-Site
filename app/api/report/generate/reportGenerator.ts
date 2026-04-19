@@ -12,7 +12,7 @@ export const generateReport = async (
 ): Promise<string> => {
 
     const provider = process.env.REPORT_AI_PROVIDER as AIRequestOptions["provider"]
-    const model = provider === 'anthropic' ? 'claude-sonnet-4-6' : 'gpt-4o'
+    const model = provider === 'anthropic' ? 'claude-sonnet-4-6' : 'gpt-5.4'
 
     return callAI({
         provider,

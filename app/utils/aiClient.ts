@@ -65,7 +65,7 @@ const callOpenAI = async (options: AIRequestOptions): Promise<string> => {
         },
         body: JSON.stringify({
             model: options.model,
-            max_tokens: options.maxTokens ?? 4096,
+            max_completion_tokens: options.maxTokens ?? 4096,
             temperature: 0.7,
             messages: [
                 {
@@ -80,7 +80,10 @@ const callOpenAI = async (options: AIRequestOptions): Promise<string> => {
         })
     })
 
-    if (!res.ok) throw new Error(`OpenAI API error: ${res.status}`)
+    if (!res.ok) {
+        const errorData = await res.json().catch(() => null)
+        throw new Error(`OpenAI API error: ${res.status} — ${errorData?.error?.message ?? 'Unknown error'}`)
+    }
 
     const data = await res.json()
     return stripMarkdownFences(data.choices[0].message.content)

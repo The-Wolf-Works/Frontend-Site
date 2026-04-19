@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { AiReportPrompt, ReportFormData } from '@/lib/types'
 import StepForm from './StepForm'
 import StepGenerate from './StepGenerate'
+import StepFinalise from './StepFinalise'
 
 interface Props {
     prompts: AiReportPrompt[]
@@ -54,6 +55,12 @@ const ReportWizard = ({ prompts }: Props) => {
     const [formData, setFormData] = useState<ReportFormData | null>(null)
     const [content, setContent] = useState<string>('')
 
+    const handleReset = () => {
+        setFormData(null)
+        setContent('')
+        setStep(1)
+    }
+
     const handleFormSubmit = (data: Omit<ReportFormData, 'uuid'>) => {
         setFormData({
             ...data,
@@ -84,6 +91,16 @@ const ReportWizard = ({ prompts }: Props) => {
                     onBack={() => setStep(1)}
                     onNext={() => setStep(3)}
                 />
+            )}
+            {step === 3 && formData && (
+                <div className="w-3/4">
+                    <StepFinalise
+                        formData={formData}
+                        content={content}
+                        onBack={() => setStep(2)}
+                        onReset={handleReset}
+                    />
+                </div>
             )}
         </div>
     )

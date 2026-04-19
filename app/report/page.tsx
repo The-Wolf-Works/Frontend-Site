@@ -8,16 +8,25 @@ import ReportWizard from '@/app/components/report/ReportWizard'
  * @returns Report page
  */
 const ReportPage = async () => {
-    const data = await client.request<GetAiReportPromptsResponse>(GET_AI_REPORT_PROMPTS)
-    const prompts = data.aIReportPrompts?.nodes ?? []
 
-    return (
-        <div className="flex-1 flex flex-col items-center justify-center px-6">
-            <div className="w-full max-w-3xl">
-                <ReportWizard prompts={prompts} />
+    try {
+        const data = await client.request<GetAiReportPromptsResponse>(GET_AI_REPORT_PROMPTS)
+        const prompts = data.aIReportPrompts?.nodes ?? []
+
+        return (
+            <div className="flex-1 flex flex-col items-center justify-center px-6">
+                <div className="w-full max-w-3xl">
+                    <ReportWizard prompts={prompts} />
+                </div>
             </div>
-        </div>
-    )
+        )
+    } catch {
+        return (
+            <div className="flex-1 flex items-center justify-center">
+                <p className="text-white/50 text-sm">Failed to load report prompts. Please try again.</p>
+            </div>
+        )
+    }
 }
 
 export default ReportPage

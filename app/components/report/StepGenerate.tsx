@@ -1,9 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useEditor, EditorContent } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
+import { useEffect, useRef, useState } from 'react'
 import { ReportFormData } from '@/lib/types'
+import ReportEditor from './ReportEditor'
 
 interface Props {
     formData: ReportFormData
@@ -28,24 +27,6 @@ const statusConfig: Record<GenerateStatus, { message: string; messageClass: stri
         message: 'Failed to generate report.',
         messageClass: 'text-red-400'
     }
-}
-
-const ReportEditor = ({ content, onContentChange }: {
-    content: string; onContentChange: (c: string) => void
-}) => {
-    const editor = useEditor({
-        extensions: [StarterKit],
-        content,
-        immediatelyRender: false,
-        onUpdate: ({ editor }) => {
-            onContentChange(editor.getHTML())
-        }
-    })
-    return (
-        <div className="w-full bg-white/5 border border-white/10 rounded-lg p-6 prose prose-invert prose-sm !max-w-none mb-6 h-[60vh] overflow-y-auto">
-            <EditorContent editor={editor} />
-        </div>
-    )
 }
 
 const StepGenerate = ({ formData, initialContent, onContentChange, onBack, onNext }: Props) => {
@@ -88,11 +69,16 @@ const StepGenerate = ({ formData, initialContent, onContentChange, onBack, onNex
         }
     }
 
+    const hasGenerated = useRef(false)
+
     /**
     * Auto-generates on mount, skipped if content already exists
     */
     useEffect(() => {
-        if(!initialContent) generate()
+        if (!initialContent && !hasGenerated.current) {
+            hasGenerated.current = true
+            generate()
+        }
     }, [])
 
     const { message, messageClass } = statusConfig[status]
