@@ -213,3 +213,25 @@ export const GET_TESTIMONIALS = gql`
         }
     }
 `
+
+// AI Report Prompts
+export const GET_AI_REPORT_PROMPTS = gql`
+    query GetAiReportPrompts {
+        aIReportPrompts {
+            nodes {
+                databaseId
+                title
+            }
+        }
+    }
+`
+export const GET_AI_REPORT_PROMPT = gql`
+    query GetAiReportPrompt($id: ID!) {
+        aIReportPrompt(id: $id, idType: DATABASE_ID) {
+            title
+            aiReportPrompts {
+                postContent
+            }
+        }
+    }
+`

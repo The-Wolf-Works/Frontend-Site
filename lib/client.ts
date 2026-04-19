@@ -6,6 +6,9 @@ if (!endpoint) {
     throw new Error('NEXT_PUBLIC_WORDPRESS_API_URL is not defined in .env.local')
 }
 
+/**
+ * GraphQL client for WordPress
+ */
 export const client = new GraphQLClient(endpoint, {
     headers: {
         'Content-Type': 'application/json'

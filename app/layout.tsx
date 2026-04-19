@@ -42,17 +42,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} antialiased min-h-screen flex flex-col`}
+        className={`${inter.className} antialiased min-h-screen flex flex-col bg-brand-secondary`}
       >
-        <SmoothScroll />
         <Suspense>
             <RecaptchaProvider>
                 <ModalProvider>
-                    <Navigation />
                     <main className="flex-1 flex flex-col">
                         {children}
                     </main>
-                    <Footer />
                 </ModalProvider>
             </RecaptchaProvider>
         </Suspense>

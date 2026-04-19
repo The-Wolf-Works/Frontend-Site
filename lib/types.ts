@@ -166,7 +166,6 @@ export interface Testimonial {
         }
     } | null
 }
-
 export interface GetTestimonialsResponse {
     testimonials: {
         nodes: Array<{
@@ -174,3 +173,31 @@ export interface GetTestimonialsResponse {
         }>
     }
 }
+
+// AI Report Prompts
+export interface AiReportPrompt {
+    databaseId: number
+    title: string
+    aiReportPrompts: {
+        postContent: string
+    }
+}
+export interface GetAiReportPromptsResponse {
+    aIReportPrompts: {
+        nodes: AiReportPrompt[]
+    }
+}
+export interface GetAiReportPromptResponse {
+    aIReportPrompt: AiReportPrompt | null
+}
+
+// Report Form Data
+export interface ReportFormData {
+    clientName: string
+    clientEmail: string
+    clientDomain: string
+    promptId: number
+    promptTitle: string
+    uuid: string
+}
+
