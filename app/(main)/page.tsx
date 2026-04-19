@@ -16,12 +16,12 @@ import type {
     GetTestimonialsResponse
 } from '@/lib/types';
 
-import Hero from './components/homepage/Hero';
-import HowItWorks from './components/blocks/HowItWorks';
-import PricingGuide from './components/blocks/PricingGuide';
-import WhyTheWolfWorks from './components/blocks/WhyTheWolfWorks';
-import AboutTheWolfPack from './components/blocks/AboutTheWolfPack';
-import Testimonials from './components/blocks/Testimonials';
+import Hero from '../components/homepage/Hero';
+import HowItWorks from '../components/blocks/HowItWorks';
+import PricingGuide from '../components/blocks/PricingGuide';
+import WhyTheWolfWorks from '../components/blocks/WhyTheWolfWorks';
+import AboutTheWolfPack from '../components/blocks/AboutTheWolfPack';
+import Testimonials from '../components/blocks/Testimonials';
 
 const Home = async () => {
     const [homepageData, howItWorksData, pricingGuideData, whyTheWolfWorksData, aboutTheWolfPackData, testimonialsData] = await Promise.all([

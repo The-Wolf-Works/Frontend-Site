@@ -21,19 +21,19 @@ const STEPS = [
  * @returns Step indicator
  */
 const StepIndicator = ({ current }: { current: 1 | 2 | 3 }) => (
-    <div className="flex items-center gap-2 mb-8">
+    <div className="flex items-center gap-10">
         {STEPS.map(({ number, label }) => (
-            <div key={number} className="flex items-center gap-2">
+            <div key={number} className="flex items-center gap-10">
                 <div className="flex flex-col items-center gap-1">
                     <div
                         className={
-                            `w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${current === number ? 'bg-brand-primary text-brand-secondary' : current > number ? 'bg-brand-primary/20 text-brand-primary' : 'bg-white/10 text-white/30'}`
+                            `w-12 h-12 rounded-full flex items-center justify-center text-md font-bold transition-colors ${current === number ? 'bg-brand-primary text-brand-secondary' : current > number ? 'bg-brand-primary/20 text-brand-primary' : 'bg-white/10 text-white/30'}`
                         }
                     >
                         {number}
                     </div>
                     <span className={
-                        `text-xs transition-colors ${current === number ? 'text-white' : current > number ? 'text-white/40' : 'text-white/20'}`
+                        `text-sm transition-colors ${current === number ? 'text-white' : current > number ? 'text-white/40' : 'text-white/20'}`
                     }>
                         {label}
                     </span>
@@ -63,14 +63,18 @@ const ReportWizard = ({ prompts }: Props) => {
     }
 
     return (
-        <div>
-            <StepIndicator current={step} />
+        <div className="flex items-center flex-col gap-10">
+            <div className="">
+                <StepIndicator current={step} />
+            </div>
             {step === 1 && (
-                <StepForm
-                    prompts={prompts}
-                    initialData={formData}
-                    onSubmit={handleFormSubmit}
-                />
+                <div className="w-3/4">
+                    <StepForm
+                        prompts={prompts}
+                        initialData={formData}
+                        onSubmit={handleFormSubmit}
+                    />
+                </div>
             )}
             {step === 2 && formData && (
                 <StepGenerate

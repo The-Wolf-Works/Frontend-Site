@@ -42,7 +42,7 @@ const ReportEditor = ({ content, onContentChange }: {
         }
     })
     return (
-        <div className="bg-white/5 border border-white/10 rounded-lg p-6 prose prose-invert prose-sm max-w-none mb-6">
+        <div className="w-full bg-white/5 border border-white/10 rounded-lg p-6 prose prose-invert prose-sm !max-w-none mb-6 h-[60vh] overflow-y-auto">
             <EditorContent editor={editor} />
         </div>
     )
@@ -121,7 +121,9 @@ const StepGenerate = ({ formData, initialContent, onContentChange, onBack, onNex
             )}
 
             {status === 'ready' && (
-                <ReportEditor content={generatedContent} onContentChange={onContentChange} />
+                <div className="relative">
+                    <ReportEditor content={generatedContent} onContentChange={onContentChange} />
+                </div>
             )}
 
             <div className="flex gap-3 mt-4">

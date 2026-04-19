@@ -44,15 +44,12 @@ export default function RootLayout({
       <body
         className={`${inter.className} antialiased min-h-screen flex flex-col bg-brand-secondary`}
       >
-        <SmoothScroll />
         <Suspense>
             <RecaptchaProvider>
                 <ModalProvider>
-                    <Navigation />
                     <main className="flex-1 flex flex-col">
                         {children}
                     </main>
-                    <Footer />
                 </ModalProvider>
             </RecaptchaProvider>
         </Suspense>

@@ -12,8 +12,8 @@ const ReportPage = async () => {
     const prompts = data.aIReportPrompts?.nodes ?? []
 
     return (
-        <div className="flex-1 flex flex-col items-center justify-center px-6 py-16">
-            <div className="w-full max-w-lg">
+        <div className="flex-1 flex flex-col items-center justify-center px-6">
+            <div className="w-full max-w-3xl">
                 <ReportWizard prompts={prompts} />
             </div>
         </div>
