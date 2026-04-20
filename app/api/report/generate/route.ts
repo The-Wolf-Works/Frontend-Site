@@ -35,10 +35,8 @@ export const POST = async (req: NextRequest) => {
             client_domain: clientDomain
         })
 
-        console.log('Prompt:', prompt)
-
-        const content = await generateReport(prompt)
-        return NextResponse.json({ content })
+        const report = await generateReport(prompt)
+        return NextResponse.json(report)
 
     } catch (error) {
         return NextResponse.json({ error: error instanceof Error ? error.message : 'Failed to generate report' }, {
