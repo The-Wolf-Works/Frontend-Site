@@ -1,13 +1,13 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { ReportFormData } from '@/lib/types'
+import { ReportFormData, ReportStructuredData } from '@/lib/types'
 import ReportEditor from './ReportEditor'
 
 interface Props {
     formData: ReportFormData
-    initialContent: string
-    onContentChange: (content: string) => void
+    initialReportData: ReportStructuredData | null
+    onReportDataChange: (data: ReportStructuredData) => void
     onBack: () => void
     onNext: () => void
 }
@@ -29,10 +29,10 @@ const statusConfig: Record<GenerateStatus, { message: string; messageClass: stri
     }
 }
 
-const StepGenerate = ({ formData, initialContent, onContentChange, onBack, onNext }: Props) => {
-    const [status, setStatus] = useState<GenerateStatus>(initialContent ? 'ready' : 'loading')
+const StepGenerate = ({ formData, initialReportData, onReportDataChange, onBack, onNext }: Props) => {
+    const [status, setStatus] = useState<GenerateStatus>(initialReportData ? 'ready' : 'loading')
     const [error, setError] = useState<string | null>(null)
-    const [generatedContent, setGeneratedContent] = useState(initialContent)
+    const [reportData, setReportData] = useState<ReportStructuredData | null>(initialReportData)
 
     /**
      * Calls the generate API and loads the response into the editor
@@ -59,8 +59,8 @@ const StepGenerate = ({ formData, initialContent, onContentChange, onBack, onNex
 
             if (!res.ok) throw new Error(data.error ?? 'Unknown error')
 
-            setGeneratedContent(data.content)
-            onContentChange(data.content)
+            setReportData(data)
+            onReportDataChange(data)
             setStatus('ready')
 
         } catch (err) {
@@ -75,7 +75,7 @@ const StepGenerate = ({ formData, initialContent, onContentChange, onBack, onNex
     * Auto-generates on mount, skipped if content already exists
     */
     useEffect(() => {
-        if (!initialContent && !hasGenerated.current) {
+        if (!initialReportData && !hasGenerated.current) {
             hasGenerated.current = true
             generate()
         }
@@ -106,9 +106,16 @@ const StepGenerate = ({ formData, initialContent, onContentChange, onBack, onNex
                 </div>
             )}
 
-            {status === 'ready' && (
+            {status === 'ready' && reportData && (
                 <div className="relative">
-                    <ReportEditor content={generatedContent} onContentChange={onContentChange} />
+                    <ReportEditor
+                        content={reportData.report_html}
+                        onContentChange={(html) => {
+                            const updated = { ...reportData, report_html: html }
+                            setReportData(updated)
+                            onReportDataChange(updated)
+                        }}
+                    />
                 </div>
             )}
 

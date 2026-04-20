@@ -1,12 +1,12 @@
 'use client'
 
 import { useState } from "react"
-import { ReportFormData } from "@/lib/types"
+import { ReportFormData, ReportStructuredData } from "@/lib/types"
 import { ActionStatus } from './types'
 
 interface Props {
     formData: ReportFormData
-    content: string
+    reportData: ReportStructuredData
     onBack: () => void
     onReset: () => void
 }
@@ -36,7 +36,7 @@ const statusConfig: Record<ActionStatus, { icon: string; class: string }> = {
     }
 }
 
-const StepFinalise = ({ formData, content, onBack, onReset }: Props) => {
+const StepFinalise = ({ formData, reportData, onBack, onReset }: Props) => {
     const [sendEmail, setSendEmail] = useState(true)
     const [generatePDF, setGeneratePDF] = useState(true)
     const [actions, setActions] = useState<ActionState>({
@@ -55,7 +55,7 @@ const StepFinalise = ({ formData, content, onBack, onReset }: Props) => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    html: content,
+                    reportData,
                     clientName: formData.clientName,
                     clientEmail: formData.clientEmail,
                     clientDomain: formData.clientDomain,
