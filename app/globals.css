@@ -1,8 +1,15 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+@plugin "tailwindcss-animate";
+
+@keyframes scrollDot {
+    0%, 100% { transform: translateY(0); opacity: 0.6; }
+    50%       { transform: translateY(8px); opacity: 1; }
+}
 
 @theme {
     --breakpoint-nav: 1000px;
+    --animate-scroll-dot: scrollDot 1.8s ease-in-out infinite;
     --color-dark-mode: #fff;
     --color-brand-primary: #5EFC8D;
     --color-brand-secondary: #263038;

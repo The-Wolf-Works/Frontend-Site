@@ -47,9 +47,9 @@ const NextSteps = () => {
     const cols = options.length === 1 ? 'grid-cols-1 max-w-sm' : options.length === 2 ? 'grid-cols-2' : 'grid-cols-3'
 
     return (
-        <section className="border-t border-white/10 px-8 py-10">
-            <div className="max-w-3xl mx-auto">
-                <div className="text-center mb-8">
+        <section id="next-steps" className="min-h-screen flex flex-col justify-center border-t border-white/10 px-8 py-20">
+            <div className="max-w-3xl mx-auto w-full">
+                <div className="text-center mb-10">
                     <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-2">What Happens Next</p>
                     <h2 className="text-2xl font-extrabold text-white">Choose Your Next Step</h2>
                     <p className="text-white/40 text-sm mt-2">Two options to help you grow — pick what works for you.</p>

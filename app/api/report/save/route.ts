@@ -9,6 +9,7 @@ interface SaveReportPayload {
     clientDomain: string
     uuid: string
     promptId: number
+    promptTitle: string
     generatePDF: boolean
 }
 
@@ -20,7 +21,7 @@ interface SaveReportPayload {
 export const POST = async (req: NextRequest) => {
     try {
         const {
-            reportData, clientName, clientEmail, clientDomain, uuid, promptId, generatePDF }: SaveReportPayload = await req.json()
+            reportData, clientName, clientEmail, clientDomain, uuid, promptId, promptTitle, generatePDF }: SaveReportPayload = await req.json()
 
         if (!reportData || !clientName || !clientEmail || !clientDomain || !uuid || !promptId) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -35,13 +36,13 @@ export const POST = async (req: NextRequest) => {
                 client_domain: clientDomain,
                 uuid,
                 prompt_id: promptId,
+                prompt_title: promptTitle,
                 generate_pdf: generatePDF
             })
         })
 
         if (!res.ok) {
             const errorData = await res.json().catch(() => null)
-            console.log('WP save error:', errorData)
             return NextResponse.json({ error: errorData?.message ?? 'Failed to save report' }, { status: 500 })
         }
 

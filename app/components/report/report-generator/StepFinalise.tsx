@@ -61,6 +61,7 @@ const StepFinalise = ({ formData, reportData, onBack, onReset }: Props) => {
                     clientDomain: formData.clientDomain,
                     uuid: formData.uuid,
                     promptId: formData.promptId,
+                    promptTitle: formData.promptTitle,
                     generatePDF
                 })
             })

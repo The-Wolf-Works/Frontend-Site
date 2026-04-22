@@ -1,8 +1,5 @@
-'use client'
-
-import { useState } from 'react'
 import { EyeIcon, UserIcon, ArrowTrendingUpIcon } from '@heroicons/react/24/outline'
-import ExpandableText from './ExpandableText'
+import SectionLabel from './SectionLabel'
 
 interface Props {
     accessibilityView: string
@@ -38,8 +35,6 @@ const pillars = [
 ]
 
 const PillarsSection = ({ accessibilityView, clientView, revenueView }: Props) => {
-    const [active, setActive] = useState<string | null>(null)
-
     const textMap: Record<string, string> = {
         accessibility: accessibilityView,
         client: clientView,
@@ -47,29 +42,19 @@ const PillarsSection = ({ accessibilityView, clientView, revenueView }: Props) =
     }
 
     return (
-        <div className="flex flex-col gap-3">
+        <section id="pillars" className="min-h-screen border-t border-white/10 grid grid-cols-3 divide-x divide-white/10">
             {pillars.map(({ key, label, color, iconBg, Icon, iconColor }) => (
-                <div key={key} className="rounded-xl border border-white/10 p-6 flex-1" style={{ background: 'rgba(255,255,255,0.02)' }}>
-                    <div className="flex items-center gap-3 mb-4">
-                        <div className={`w-8 h-8 rounded-lg border flex items-center justify-center shrink-0 ${iconBg}`}>
-                            <Icon className={`w-4 h-4 ${iconColor}`} />
+                <div key={key} className="flex flex-col justify-center px-10 py-20 gap-6">
+                    <div className="flex items-center gap-3">
+                        <div className={`w-9 h-9 rounded-xl border flex items-center justify-center shrink-0 ${iconBg}`}>
+                            <Icon className={`w-5 h-5 ${iconColor}`} />
                         </div>
-                        <div className="flex items-center gap-2.5">
-                            <div className="h-3.5 w-0.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
-                            <p className="text-xs font-semibold tracking-widest uppercase leading-none" style={{ color }}>
-                                {label}
-                            </p>
-                        </div>
+                        <SectionLabel label={label} color={color} />
                     </div>
-                    <ExpandableText
-                        text={textMap[key]}
-                        className="text-white/65 text-sm leading-relaxed"
-                        expanded={active === key}
-                        onToggle={() => setActive(prev => prev === key ? null : key)}
-                    />
+                    <p className="text-white/65 text-base leading-relaxed">{textMap[key]}</p>
                 </div>
             ))}
-        </div>
+        </section>
     )
 }
 

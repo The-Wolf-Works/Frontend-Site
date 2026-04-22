@@ -13,7 +13,7 @@ export const generateReport = async (
 ): Promise<ReportStructuredData> => {
 
     const provider = process.env.REPORT_AI_PROVIDER as AIRequestOptions["provider"]
-    const model = provider === 'anthropic' ? 'claude-sonnet-4-6' : 'gpt-5.4'
+    const model = provider === 'anthropic' ? 'claude-sonnet-4-6' : 'gpt-5.4-mini'
 
     const raw = await callAI({
         provider,
@@ -25,6 +25,6 @@ export const generateReport = async (
     try {
         return JSON.parse(raw) as ReportStructuredData
     } catch {
-        throw new Error('AI response was not valid JSON. Check the prompt instructs the model to return structured JSON.')
+        throw new Error(`AI response was not valid JSON. First 200 chars: ${raw.slice(0, 200)}`)
     }
 }

@@ -232,5 +232,7 @@ export interface ReportStructuredData {
 export interface SiteReportResponse extends ReportStructuredData {
     client_name: string
     client_domain: string
+    report_generated_at?: string
+    report_prompt_title?: string
 }
 
