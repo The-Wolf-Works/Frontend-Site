@@ -1,5 +1,8 @@
-import { SparklesIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
+'use client'
+
+import { SparklesIcon, ArrowPathIcon, LightBulbIcon } from '@heroicons/react/24/outline'
 import SectionLabel from '../SectionLabel'
+import useScrollInView from '@/app/hooks/useScrollInView'
 
 interface Props {
     quickWin: { title: string; description: string }
@@ -8,39 +11,93 @@ interface Props {
 }
 
 const QuickWinSection = ({ quickWin, recommendation, strategicPivot }: Props) => {
-    return (
-        <section id="quick-win" className="min-h-screen flex flex-col justify-center border-t border-white/10 px-8 py-20">
-            <div className="max-w-2xl mx-auto w-full flex flex-col gap-12">
+    const { ref, inView } = useScrollInView()
 
-                <div
-                    className="rounded-2xl border border-brand-primary/20 p-8 flex flex-col gap-4"
-                    style={{ background: 'linear-gradient(135deg, rgba(94,252,141,0.06) 0%, transparent 60%)' }}
-                >
-                    <div className="flex items-center gap-2.5">
-                        <SparklesIcon className="w-4 h-4 text-brand-primary shrink-0" />
-                        <SectionLabel label="Quick Win" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-white leading-snug">{quickWin.title}</h3>
-                    <p className="text-white/65 text-base leading-relaxed">{quickWin.description}</p>
+    const fadeUp = (delay: number) => ({
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(16px)',
+        transition: `opacity 0.5s ease ${delay}ms, transform 0.5s ease ${delay}ms`,
+    })
+
+    return (
+        <section ref={ref} id="quick-win" className="min-h-screen flex flex-col border-t border-white/10 px-10 md:px-16 py-16 relative">
+
+            {/* Background */}
+            <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+            <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 0% 0%, rgba(94,252,141,0.08) 0%, transparent 55%)' }} />
+            <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 100% 100%, rgba(0,207,224,0.06) 0%, transparent 50%)' }} />
+
+            <div className="relative flex flex-col justify-between flex-1 gap-10 max-w-5xl mx-auto w-full">
+
+                {/* Header */}
+                <div className="flex flex-col gap-3" style={fadeUp(0)}>
+                    <SectionLabel label="Quick Win" />
+                    <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight">
+                        One thing you can do<br />this week.
+                    </h2>
+                    <p className="text-white/40 text-sm font-light tracking-wide max-w-md">
+                        The highest-impact change you can make right now — before anything else.
+                    </p>
                 </div>
 
-                {recommendation && (
-                    <div className="flex flex-col gap-4">
-                        <SectionLabel label="Recommendation" />
-                        <p className="text-white/65 text-base leading-relaxed">{recommendation}</p>
-                    </div>
-                )}
+                {/* Quick win card — hero of the section */}
+                <div
+                    className="relative rounded-2xl border border-brand-primary/20 p-6 md:p-8 overflow-hidden flex flex-col gap-5"
+                    style={{ background: 'rgba(94,252,141,0.03)', ...fadeUp(100) }}
+                >
+                    {/* Top accent */}
+                    <div className="absolute top-0 left-12 right-12 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(94,252,141,0.5), transparent)' }} />
+                    <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 0% 50%, rgba(94,252,141,0.06) 0%, transparent 60%)' }} />
 
-                {strategicPivot && (
-                    <div className="flex items-start gap-3 border-t border-white/10 pt-8">
-                        <ArrowPathIcon className="w-4 h-4 text-white/25 shrink-0 mt-0.5" />
-                        <div className="flex flex-col gap-1.5">
-                            <p className="text-xs font-semibold tracking-widest uppercase text-white/25">Strategic Pivot</p>
-                            <p className="text-white/45 text-sm leading-relaxed">{strategicPivot}</p>
+                    <div className="relative flex flex-col gap-5">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center shrink-0">
+                                <SparklesIcon className="w-5 h-5 text-brand-primary" />
+                            </div>
+                            <SectionLabel label="Your Quick Win" />
+                        </div>
+
+                        <div className="flex flex-col md:flex-row gap-8 md:gap-12 md:items-start">
+                            <div className="flex flex-col gap-3 md:w-2/5 shrink-0">
+                                <h3 className="text-white text-xl md:text-2xl font-bold leading-snug">{quickWin.title}</h3>
+                            </div>
+                            <div className="hidden md:block w-px self-stretch" style={{ background: 'linear-gradient(to bottom, transparent, rgba(94,252,141,0.2), transparent)' }} />
+                            <p className="text-white/65 text-base leading-relaxed flex-1">{quickWin.description}</p>
                         </div>
                     </div>
-                )}
+                </div>
 
+                {/* Recommendation + Strategic Pivot */}
+                <div className="flex flex-col md:flex-row gap-8 md:gap-12" style={fadeUp(200)}>
+
+                    {/* Recommendation */}
+                    {recommendation && (
+                        <div className="flex gap-5 flex-1">
+                            <div className="w-1 rounded-full shrink-0 self-stretch" style={{ background: 'linear-gradient(to bottom, rgba(94,252,141,0.6), transparent)' }} />
+                            <div className="flex flex-col gap-3 py-1">
+                                <div className="flex items-center gap-2.5">
+                                    <LightBulbIcon className="w-4 h-4 text-brand-primary/60 shrink-0" />
+                                    <SectionLabel label="Recommendation" />
+                                </div>
+                                <p className="text-white/60 text-base leading-relaxed">{recommendation}</p>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Strategic Pivot */}
+                    {strategicPivot && (
+                        <div className="flex gap-5 md:w-2/5 shrink-0">
+                            <div className="w-1 rounded-full shrink-0 self-stretch" style={{ background: 'linear-gradient(to bottom, rgba(0,207,224,0.6), transparent)' }} />
+                            <div className="flex flex-col gap-3 py-1">
+                                <div className="flex items-center gap-2.5">
+                                    <ArrowPathIcon className="w-4 h-4 text-brand-accent/60 shrink-0" />
+                                    <SectionLabel label="Strategic Pivot" color="brand-accent" />
+                                </div>
+                                <p className="text-white/60 text-base leading-relaxed">{strategicPivot}</p>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
         </section>
     )

@@ -1,5 +1,9 @@
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
+'use client'
+
+import { FlagIcon } from '@heroicons/react/24/solid'
+import { ArrowTrendingDownIcon } from '@heroicons/react/24/outline'
 import SectionLabel from '../SectionLabel'
+import useScrollInView from '@/app/hooks/useScrollInView'
 
 interface Props {
     redFlags: string[]
@@ -7,34 +11,88 @@ interface Props {
 }
 
 const RedFlagsSection = ({ redFlags, leakyBucket }: Props) => {
+    const { ref, inView } = useScrollInView()
+
+    const fadeUp = (delay: number) => ({
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(16px)',
+        transition: `opacity 0.5s ease ${delay}ms, transform 0.5s ease ${delay}ms`,
+    })
+
     return (
-        <section id="red-flags" className="min-h-screen flex flex-col justify-center border-t border-white/10 px-8 py-20">
-            <div className="max-w-2xl mx-auto w-full flex flex-col gap-12">
+        <section ref={ref} id="red-flags" className="min-h-screen flex flex-col border-t border-white/10 px-10 md:px-16 py-24 relative overflow-hidden" style={{ background: 'rgba(0,0,0,0.15)' }}>
 
-                {redFlags.length > 0 && (
-                    <div className="flex flex-col gap-6">
-                        <div className="flex items-center gap-2.5">
-                            <ExclamationTriangleIcon className="w-4 h-4 text-red-400 shrink-0" />
-                            <SectionLabel label="Red Flags" color="red" />
-                        </div>
-                        <ul className="flex flex-col gap-3">
+            {/* Background */}
+            <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+            <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 100% 0%, rgba(248,113,113,0.12) 0%, transparent 50%)' }} />
+            <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 0% 50%, rgba(248,113,113,0.07) 0%, transparent 50%)' }} />
+
+
+<div className="relative flex flex-col justify-between flex-1 gap-16 max-w-5xl mx-auto w-full">
+
+                {/* Header */}
+                <div className="flex flex-col gap-3" style={fadeUp(0)}>
+                    <SectionLabel label="Red Flags" color="red" />
+                    <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight">
+                        What needs fixing<br />right now.
+                    </h2>
+                    <p className="text-white/40 text-sm font-light tracking-wide max-w-md">
+                        These issues are costing you visitors and conversions today — not tomorrow.
+                    </p>
+                </div>
+
+                {/* Two columns — flags left, leaky bucket right */}
+                <div className="flex flex-col md:flex-row gap-8 md:gap-16 flex-1 md:items-center">
+
+                    {/* Left — flags */}
+                    {redFlags.length > 0 && (
+                        <div className="flex flex-col flex-1">
                             {redFlags.map((flag, i) => (
-                                <li key={i} className="flex items-start gap-4 border border-red-500/15 bg-red-500/[0.05] rounded-xl px-5 py-4">
-                                    <span className="text-red-400 shrink-0 text-base mt-0.5">✕</span>
-                                    <span className="text-white/75 text-base leading-relaxed">{flag}</span>
-                                </li>
+                                <div
+                                    key={i}
+                                    className="flex items-start gap-6 py-8 border-t border-white/[0.06]"
+                                    style={{
+                                        opacity: inView ? 1 : 0,
+                                        transform: inView ? 'translateX(0)' : 'translateX(-16px)',
+                                        transition: `opacity 0.5s ease ${i * 100}ms, transform 0.5s ease ${i * 100}ms`,
+                                    }}
+                                >
+                                    <div className="w-1 self-stretch rounded-full shrink-0" style={{ background: 'linear-gradient(to bottom, rgba(248,113,113,0.8), rgba(248,113,113,0.1))' }} />
+                                    <div className="flex flex-col gap-2 flex-1">
+                                        <div className="flex items-center gap-2">
+                                            <FlagIcon className="w-3 h-3 text-red-400" />
+                                            <span className="text-red-400/70 text-xs font-semibold tracking-widest uppercase">Fix required</span>
+                                        </div>
+                                        <p className="text-white/80 text-lg leading-relaxed font-light">{flag}</p>
+                                    </div>
+                                </div>
                             ))}
-                        </ul>
-                    </div>
-                )}
+                            <div className="border-t border-white/[0.06]" />
+                        </div>
+                    )}
 
-                {leakyBucket && (
-                    <div className="flex flex-col gap-4">
-                        <SectionLabel label="Leaky Bucket" color="#6b7280" />
-                        <p className="text-white/60 text-base leading-relaxed">{leakyBucket}</p>
-                    </div>
-                )}
+                    {/* Right — leaky bucket */}
+                    {leakyBucket && (
+                        <div
+                            className="md:w-80 shrink-0 relative rounded-2xl border border-amber-500/20 p-7 flex flex-col gap-5 overflow-hidden"
+                            style={{ background: 'rgba(245,158,11,0.03)', ...fadeUp(100 + redFlags.length * 100) }}
+                        >
+                            <div className="absolute top-0 left-8 right-8 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(245,158,11,0.4), transparent)' }} />
+                            <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.06) 0%, transparent 60%)' }} />
 
+                            <div className="relative flex flex-col gap-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">
+                                        <ArrowTrendingDownIcon className="w-4 h-4 text-amber-400" />
+                                    </div>
+                                    <SectionLabel label="The Leaky Bucket" color="amber" />
+                                </div>
+                                <p className="text-xs font-semibold tracking-[0.2em] uppercase text-white/25">Where you&apos;re losing money</p>
+                                <p className="text-white/60 text-sm leading-relaxed">{leakyBucket}</p>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
         </section>
     )

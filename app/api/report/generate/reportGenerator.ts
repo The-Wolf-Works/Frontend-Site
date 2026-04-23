@@ -13,7 +13,7 @@ export const generateReport = async (
 ): Promise<ReportStructuredData> => {
 
     const provider = process.env.REPORT_AI_PROVIDER as AIRequestOptions["provider"]
-    const model = provider === 'anthropic' ? 'claude-sonnet-4-6' : 'gpt-5.4-mini'
+    const model = provider === 'anthropic' ? 'claude-sonnet-4-6' : 'gpt-5.4'
 
     const raw = await callAI({
         provider,

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import SectionLabel from '../SectionLabel'
 import ScoreRing, { getScoreColor } from '../ScoreRing'
+import useScrollInView from '@/app/hooks/useScrollInView'
 
 interface Props {
     score: number
@@ -11,9 +12,11 @@ interface Props {
 }
 
 const WolfScoreSection = ({ score, summary, executiveSummary }: Props) => {
+    const { ref, inView } = useScrollInView()
     const [current, setCurrent] = useState(0)
 
     useEffect(() => {
+        if (!inView) return
         const duration = 1400
         const start = performance.now()
         let raf: number
@@ -27,13 +30,13 @@ const WolfScoreSection = ({ score, summary, executiveSummary }: Props) => {
 
         raf = requestAnimationFrame(animate)
         return () => cancelAnimationFrame(raf)
-    }, [score])
+    }, [inView, score])
 
     const scoreColor = getScoreColor(current)
     const scoreGlow = scoreColor.replace('hsl(', 'hsla(').replace(')', ', 0.2)')
 
     return (
-        <section id="wolf-score" className="min-h-screen flex flex-col justify-center border-t border-white/10 px-10 md:px-16 py-20 relative">
+        <section ref={ref} id="wolf-score" className="min-h-screen flex flex-col justify-center border-t border-white/10 px-10 md:px-16 py-20 relative">
 
             {/* Dot grid */}
             <div
