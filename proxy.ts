@@ -14,14 +14,20 @@ export const proxy = (request: NextRequest) => {
     const accessToken = process.env.REPORT_ACCESS_TOKEN;
     const existingCookie = request.cookies.get(COOKIE_NAME);
 
-    // Valid cookie — allow through
+    // Valid cookie — allow through, redirect /report root to report-generator
     if (existingCookie?.value === accessToken) {
+        if (pathname === '/report') {
+            const url = request.nextUrl.clone();
+            url.pathname = '/report/report-generator';
+            return NextResponse.redirect(url);
+        }
         return NextResponse.next();
     }
 
-    // Valid token in URL — set cookie and redirect to clean URL
+    // Valid token in URL — set cookie and redirect to report generator
     if (token && token === accessToken) {
         const url = request.nextUrl.clone();
+        url.pathname = '/report/report-generator';
         url.searchParams.delete('token');
 
         const response = NextResponse.redirect(url);
@@ -46,5 +52,5 @@ export const proxy = (request: NextRequest) => {
 export default proxy;
 
 export const config = {
-    matcher: '/report/:path*',
+    matcher: ['/report', '/report/:path*'],
 };

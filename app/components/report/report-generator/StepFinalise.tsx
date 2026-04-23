@@ -61,6 +61,7 @@ const StepFinalise = ({ formData, reportData, onBack, onReset }: Props) => {
                     clientDomain: formData.clientDomain,
                     uuid: formData.uuid,
                     promptId: formData.promptId,
+                    promptTitle: formData.promptTitle,
                     generatePDF
                 })
             })
@@ -88,6 +89,7 @@ const StepFinalise = ({ formData, reportData, onBack, onReset }: Props) => {
                         client_email: formData.clientEmail,
                         client_domain: formData.clientDomain,
                         prompt_title: formData.promptTitle,
+                        report_uuid: formData.uuid,
                     })
                 })
 

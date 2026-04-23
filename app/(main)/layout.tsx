@@ -8,9 +8,9 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
         <>
             <SmoothScroll />
             <Navigation />
-            <main className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col">
                 { children }
-            </main>
+            </div>
             <Footer />
         </>
     )
