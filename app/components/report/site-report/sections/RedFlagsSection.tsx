@@ -1,8 +1,7 @@
 'use client'
 
-import { FlagIcon } from '@heroicons/react/24/solid'
-import { ArrowTrendingDownIcon } from '@heroicons/react/24/outline'
-import SectionLabel from '../SectionLabel'
+import { icons } from '@/app/components/icons/Icons'
+import SectionLabel, { DotGrid } from '../SectionLabel'
 import useScrollInView from '@/app/hooks/useScrollInView'
 
 interface Props {
@@ -10,25 +9,26 @@ interface Props {
     leakyBucket: string
 }
 
+/**
+ * Two-column section highlighting critical issues and revenue leakage.
+ * Left column lists each red flag as a staggered slide-in row with a flag icon.
+ * Right column renders the "Leaky Bucket" card — where the site is losing money.
+ *
+ * @param redFlags    - Array of plain-text issue strings, each rendered as a flag row.
+ * @param leakyBucket - Plain-text description of the primary revenue leak.
+ */
 const RedFlagsSection = ({ redFlags, leakyBucket }: Props) => {
-    const { ref, inView } = useScrollInView()
-
-    const fadeUp = (delay: number) => ({
-        opacity: inView ? 1 : 0,
-        transform: inView ? 'translateY(0)' : 'translateY(16px)',
-        transition: `opacity 0.5s ease ${delay}ms, transform 0.5s ease ${delay}ms`,
-    })
+    const { ref, inView, fadeUp } = useScrollInView()
 
     return (
         <section ref={ref} id="red-flags" className="min-h-screen flex flex-col border-t border-white/10 px-10 md:px-16 py-24 relative overflow-hidden" style={{ background: 'rgba(0,0,0,0.15)' }}>
 
             {/* Background */}
-            <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+            <DotGrid />
             <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 100% 0%, rgba(248,113,113,0.12) 0%, transparent 50%)' }} />
             <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 0% 50%, rgba(248,113,113,0.07) 0%, transparent 50%)' }} />
 
-
-<div className="relative flex flex-col justify-between flex-1 gap-16 max-w-5xl mx-auto w-full">
+            <div className="relative flex flex-col justify-between flex-1 gap-16 max-w-5xl mx-auto w-full">
 
                 {/* Header */}
                 <div className="flex flex-col gap-3" style={fadeUp(0)}>
@@ -60,7 +60,7 @@ const RedFlagsSection = ({ redFlags, leakyBucket }: Props) => {
                                     <div className="w-1 self-stretch rounded-full shrink-0" style={{ background: 'linear-gradient(to bottom, rgba(248,113,113,0.8), rgba(248,113,113,0.1))' }} />
                                     <div className="flex flex-col gap-2 flex-1">
                                         <div className="flex items-center gap-2">
-                                            <FlagIcon className="w-3 h-3 text-red-400" />
+                                            <icons.flag className="w-3 h-3 text-red-400" />
                                             <span className="text-red-400/70 text-xs font-semibold tracking-widest uppercase">Fix required</span>
                                         </div>
                                         <p className="text-white/80 text-lg leading-relaxed font-light">{flag}</p>
@@ -83,7 +83,7 @@ const RedFlagsSection = ({ redFlags, leakyBucket }: Props) => {
                             <div className="relative flex flex-col gap-4">
                                 <div className="flex items-center gap-3">
                                     <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">
-                                        <ArrowTrendingDownIcon className="w-4 h-4 text-amber-400" />
+                                        <icons.arrowTrendingDown className="w-4 h-4 text-amber-400" />
                                     </div>
                                     <SectionLabel label="The Leaky Bucket" color="amber" />
                                 </div>

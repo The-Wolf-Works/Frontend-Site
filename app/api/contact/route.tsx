@@ -71,7 +71,10 @@ export const POST = async (req: NextRequest) => {
         ...formData,
         site_name: process.env.WP_SITE_NAME!,
         site_url: process.env.WP_SITE_URL!,
-        admin_email: process.env.POSTMARK_ADMIN_EMAIL!
+        admin_email: process.env.POSTMARK_ADMIN_EMAIL!,
+        site_report_link: formData.report_uuid
+            ? `<a href="${process.env.NEXT_PUBLIC_SITE_URL}/report/site-report/${formData.report_uuid}">site report</a>`
+            : ''
     }
 
     // Map email types to streams and from addresses

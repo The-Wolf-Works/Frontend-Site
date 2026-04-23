@@ -8,6 +8,12 @@ interface Props {
     testimonials: Testimonial[]
 }
 
+/**
+ * Wraps the shared Testimonials carousel for use in the site report page.
+ * Fades and slides in on scroll entry. Renders nothing if the testimonials array is empty.
+ *
+ * @param testimonials - Array of Testimonial objects fetched from WordPress.
+ */
 const TestimonialsSection = ({ testimonials }: Props) => {
     const { ref, inView } = useScrollInView()
 
@@ -17,7 +23,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
         <section
             ref={ref}
             id="testimonials"
-            className="min-h-screen flex flex-col justify-center"
+            className="flex flex-col border-t border-white/5"
             style={{
                 opacity: inView ? 1 : 0,
                 transform: inView ? 'translateY(0)' : 'translateY(20px)',

@@ -13,6 +13,13 @@ const sections = [
     { id: 'testimonials',         label: 'Testimonials' },
 ]
 
+/**
+ * Fixed right-side dot navigation for the site report page.
+ * Tracks scroll position to highlight the active section, shows a section label
+ * on hover and while active, and smooth-scrolls to a section on click.
+ * Hidden on screens below the `lg` breakpoint.
+ * Must be rendered outside any `overflow: clip` ancestor — see site-report layout.tsx.
+ */
 const ReportProgress = () => {
     const [active, setActive]   = useState('hero')
     const [hovered, setHovered] = useState<string | null>(null)

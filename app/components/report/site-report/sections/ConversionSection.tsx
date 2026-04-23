@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import useScrollInView from '@/app/hooks/useScrollInView'
-import SectionLabel from '../SectionLabel'
+import SectionLabel, { DotGrid } from '../SectionLabel'
 import { ConversionReadiness } from '@/lib/types'
 
 interface Props {
@@ -66,6 +66,18 @@ const MetricCard = ({ label, description, value, ready, delay }: {
 
 // ── Section ───────────────────────────────────────────────────────────────────
 
+/**
+ * Displays the site's conversion readiness broken down across four metrics.
+ * Renders an overall score banner with an animated counter, then a 2-column
+ * grid of MetricCards each with an animated score bar.
+ *
+ * @param data                      - ConversionReadiness object from the report data.
+ * @param data.overall              - Overall score out of 10.
+ * @param data.clarity              - Clarity & Trust score out of 10.
+ * @param data.trust_signals        - Trust Signals score out of 10.
+ * @param data.mobile_experience    - Mobile Experience score out of 10.
+ * @param data.conversion_structure - Conversion Structure score out of 10.
+ */
 const ConversionSection = ({ data }: Props) => {
     const { ref: sectionRef, inView: animated } = useScrollInView()
     const [barsReady, setBarsReady] = useState(false)
@@ -101,7 +113,7 @@ const ConversionSection = ({ data }: Props) => {
         <section ref={sectionRef} id="conversion-readiness" className="min-h-screen flex flex-col justify-center border-t border-white/10 px-10 md:px-16 py-20 relative" style={{ background: 'rgba(0,0,0,0.15)' }}>
 
             {/* Background */}
-            <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+            <DotGrid />
             <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 0% 0%, rgba(94,252,141,0.06) 0%, transparent 50%)' }} />
             <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 100% 100%, rgba(0,207,224,0.06) 0%, transparent 50%)' }} />
 

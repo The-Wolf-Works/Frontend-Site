@@ -6,10 +6,10 @@ import { SiteReportResponse, GetTestimonialsResponse } from '@/lib/types'
 import HeroSection from '@/app/components/report/site-report/sections/HeroSection'
 import WolfScoreSection from '@/app/components/report/site-report/sections/WolfScoreSection'
 import ConversionSection from '@/app/components/report/site-report/sections/ConversionSection'
-import PillarsSection from '@/app/components/report/site-report/PillarsSection'
+import PillarsSection from '@/app/components/report/site-report/sections/PillarsSection'
 import RedFlagsSection from '@/app/components/report/site-report/sections/RedFlagsSection'
 import QuickWinSection from '@/app/components/report/site-report/sections/QuickWinSection'
-import NextSteps from '@/app/components/report/site-report/NextSteps'
+import NextSteps from '@/app/components/report/site-report/sections/NextSteps'
 import TestimonialsSection from '@/app/components/report/site-report/sections/TestimonialsSection'
 
 interface Props {
@@ -32,7 +32,7 @@ const SiteReportPage = async ({ params }: Props) => {
     const score = report.wolf_score?.score ?? 0
 
     return (
-        <main className="bg-brand-secondary">
+        <div className="bg-brand-secondary">
             <HeroSection
                 clientName={report.client_name}
                 clientDomain={report.client_domain}
@@ -76,7 +76,7 @@ const SiteReportPage = async ({ params }: Props) => {
             <NextSteps />
 
             <TestimonialsSection testimonials={testimonials} />
-        </main>
+        </div>
     )
 }
 

@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { CheckIcon } from '@heroicons/react/24/outline'
+import { icons } from '@/app/components/icons/Icons'
 import useScrollInView from '@/app/hooks/useScrollInView'
+import { DotGrid } from '@/app/components/report/site-report/SectionLabel'
 
 interface NextStepOption {
     title: string
@@ -46,21 +47,21 @@ const options: NextStepOption[] = [
     },
 ]
 
+/**
+ * Closing section presenting the two next-step options for the client.
+ * Pricing cards are hardcoded in this file — update the `options` array to change them.
+ * Cards stack on mobile and spread into a 2-column grid on desktop.
+ * The featured card is highlighted with a brand-primary gradient border.
+ */
 const NextSteps = () => {
-    const { ref, inView } = useScrollInView()
+    const { ref, fadeUp } = useScrollInView()
     const cols = options.length === 1 ? 'grid-cols-1 max-w-sm' : options.length === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 md:grid-cols-3'
-
-    const fadeUp = (delay: number) => ({
-        opacity: inView ? 1 : 0,
-        transform: inView ? 'translateY(0)' : 'translateY(16px)',
-        transition: `opacity 0.5s ease ${delay}ms, transform 0.5s ease ${delay}ms`,
-    })
 
     return (
         <section ref={ref} id="next-steps" className="min-h-screen flex flex-col border-t border-white/10 px-10 md:px-16 py-24 relative" style={{ background: 'rgba(0,0,0,0.15)' }}>
 
             {/* Background */}
-            <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+            <DotGrid />
             <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(94,252,141,0.06) 0%, transparent 55%)' }} />
 
             <div className="relative flex flex-col justify-between flex-1 gap-16 max-w-5xl mx-auto w-full">
@@ -114,7 +115,7 @@ const NextSteps = () => {
                             <ul className="flex flex-col gap-3 flex-1">
                                 {option.features.map(feature => (
                                     <li key={feature} className="flex items-start gap-3">
-                                        <CheckIcon className="w-4 h-4 text-brand-primary shrink-0 mt-0.5" />
+                                        <icons.check className="w-4 h-4 text-brand-primary shrink-0 mt-0.5" />
                                         <span className={`text-sm leading-relaxed ${option.featured ? 'text-white/70' : 'text-white/55'}`}>
                                             {feature}
                                         </span>

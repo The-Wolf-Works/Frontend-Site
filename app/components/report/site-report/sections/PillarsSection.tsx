@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { EyeIcon, UserIcon, ArrowTrendingUpIcon } from '@heroicons/react/24/outline'
-import SectionLabel from './SectionLabel'
+import { icons } from '@/app/components/icons/Icons'
+import SectionLabel, { DotGrid } from '../SectionLabel'
 import useScrollInView from '@/app/hooks/useScrollInView'
 
 interface Props {
@@ -12,15 +12,24 @@ interface Props {
 }
 
 const pillars = [
-    { key: 'accessibility' as const, label: 'Accessibility', heading: 'Can everyone use it?',      color: '#5EFC8D', glow: 'rgba(94,252,141,0.08)',  border: 'rgba(94,252,141,0.2)',  Icon: EyeIcon },
-    { key: 'client'        as const, label: 'Client View',   heading: 'What visitors experience.', color: '#00cfe0', glow: 'rgba(0,207,224,0.08)',   border: 'rgba(0,207,224,0.2)',   Icon: UserIcon },
-    { key: 'revenue'       as const, label: 'Revenue',        heading: 'Is it earning its keep?',  color: '#f59e0b', glow: 'rgba(245,158,11,0.08)',  border: 'rgba(245,158,11,0.2)',  Icon: ArrowTrendingUpIcon },
+    { key: 'accessibility' as const, label: 'Accessibility', heading: 'Can everyone use it?',      color: '#5EFC8D', glow: 'rgba(94,252,141,0.08)',  border: 'rgba(94,252,141,0.2)',  Icon: icons.eye },
+    { key: 'client'        as const, label: 'Client View',   heading: 'What visitors experience.', color: '#00cfe0', glow: 'rgba(0,207,224,0.08)',   border: 'rgba(0,207,224,0.2)',   Icon: icons.user },
+    { key: 'revenue'       as const, label: 'Revenue',        heading: 'Is it earning its keep?',  color: '#f59e0b', glow: 'rgba(245,158,11,0.08)',  border: 'rgba(245,158,11,0.2)',  Icon: icons.arrowTrendingUp },
 ]
 
 // ── Section ───────────────────────────────────────────────────────────────────
 
+/**
+ * Tabbed section presenting the site through three evaluation lenses.
+ * Switching tabs animates content in/out with a slide+fade transition.
+ * The background glow colour transitions to match the active pillar's colour.
+ *
+ * @param accessibilityView - Analysis text for the Accessibility pillar (green).
+ * @param clientView        - Analysis text for the Client View pillar (cyan).
+ * @param revenueView       - Analysis text for the Revenue pillar (amber).
+ */
 const PillarsSection = ({ accessibilityView, clientView, revenueView }: Props) => {
-    const { ref, inView } = useScrollInView()
+    const { ref, inView, fadeUp } = useScrollInView()
     const [active, setActive] = useState(0)       // drives tab highlight + background
     const [displayed, setDisplayed] = useState(0) // drives content (lags during transition)
     const [direction, setDirection] = useState(1) // 1 = going right, -1 = going left
@@ -31,12 +40,6 @@ const PillarsSection = ({ accessibilityView, clientView, revenueView }: Props) =
         client: clientView,
         revenue: revenueView,
     }
-
-    const fadeUp = (delay: number) => ({
-        opacity: inView ? 1 : 0,
-        transform: inView ? 'translateY(0)' : 'translateY(16px)',
-        transition: `opacity 0.5s ease ${delay}ms, transform 0.5s ease ${delay}ms`,
-    })
 
     const goTo = (i: number) => {
         if (i === active) return
@@ -56,10 +59,10 @@ const PillarsSection = ({ accessibilityView, clientView, revenueView }: Props) =
         <section ref={ref} id="pillars" className="min-h-screen flex flex-col justify-center border-t border-white/10 px-10 md:px-16 py-20 relative">
 
             {/* Background */}
-            <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+            <DotGrid />
             <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 100%, ${activePillar.glow} 0%, transparent 50%)`, transition: 'background 0.8s ease' }} />
 
-            <div className="relative flex flex-col gap-12 max-w-5xl mx-auto w-full">
+            <div className="relative flex flex-col gap-6 max-w-5xl mx-auto w-full">
 
                 {/* Header */}
                 <div className="flex flex-col gap-3" style={fadeUp(0)}>

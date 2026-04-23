@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import SectionLabel from '../SectionLabel'
+import SectionLabel, { DotGrid } from '../SectionLabel'
 import ScoreRing, { getScoreColor } from '../ScoreRing'
 import useScrollInView from '@/app/hooks/useScrollInView'
 
@@ -11,6 +11,15 @@ interface Props {
     executiveSummary: string
 }
 
+/**
+ * Displays the overall Wolf Score for the site report.
+ * Animates a numeric counter and ScoreRing from 0 to the final score on scroll entry.
+ * Score colour transitions from red → amber → green based on value.
+ *
+ * @param score            - Numeric score out of 100.
+ * @param summary          - Short plain-text interpretation of what the score means.
+ * @param executiveSummary - Optional longer summary rendered in a card below the score ring.
+ */
 const WolfScoreSection = ({ score, summary, executiveSummary }: Props) => {
     const { ref, inView } = useScrollInView()
     const [current, setCurrent] = useState(0)
@@ -38,14 +47,7 @@ const WolfScoreSection = ({ score, summary, executiveSummary }: Props) => {
     return (
         <section ref={ref} id="wolf-score" className="min-h-screen flex flex-col justify-center border-t border-white/10 px-10 md:px-16 py-20 relative">
 
-            {/* Dot grid */}
-            <div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                    backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)',
-                    backgroundSize: '32px 32px',
-                }}
-            />
+            <DotGrid />
 
             {/* Score glow — full section gradient, animates with score colour */}
             <div

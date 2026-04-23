@@ -1,4 +1,5 @@
 import RadarGraphic from '@/app/components/graphics/RadarGraphic'
+import { DotGrid } from '@/app/components/report/site-report/SectionLabel'
 
 interface Props {
     clientName: string
@@ -14,6 +15,16 @@ const formatDate = (raw?: string) => {
     return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
+/**
+ * Opening full-viewport section of the site report.
+ * Renders the client name as a large hero heading alongside the RadarGraphic,
+ * a top bar with branding, a scroll indicator, and a metadata strip.
+ *
+ * @param clientName   - Name of the client shown as the hero heading.
+ * @param clientDomain - Client's website URL shown in the metadata strip.
+ * @param reportDate   - ISO date string for when the report was generated; formatted to "d Month YYYY".
+ * @param reportType   - Optional label prepended to "Report" in the sub-heading (e.g. "Free", "Paid").
+ */
 const HeroSection = ({ clientName, clientDomain, reportDate, reportType }: Props) => {
     const date = formatDate(reportDate)
 
@@ -28,7 +39,7 @@ const HeroSection = ({ clientName, clientDomain, reportDate, reportType }: Props
         <section id="hero" className="min-h-screen flex flex-col px-10 md:px-16 py-12 relative overflow-hidden">
 
             {/* Background — dot grid + glows */}
-            <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+            <DotGrid />
             <div className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(94,252,141,0.12) 0%, transparent 65%)', filter: 'blur(40px)' }} />
             <div className="absolute -bottom-20 -left-20 w-[400px] h-[400px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(0,207,224,0.08) 0%, transparent 65%)', filter: 'blur(40px)' }} />
 

@@ -51,7 +51,7 @@ export default function Testimonials({ testimonials, slidesPerView, placeholderP
 
     return (
         <section
-            className="bg-brand-secondary border-t border-white/5 py-20 scroll-mt-[var(--nav-height)] overflow-x-hidden"
+            className="bg-brand-secondary py-20 scroll-mt-[var(--nav-height)] overflow-x-hidden"
             id="testimonials"
         >
             {/* Heading */}
@@ -116,7 +116,7 @@ export default function Testimonials({ testimonials, slidesPerView, placeholderP
                                     </p>
 
                                     {/* Person */}
-                                    <div className="border-t border-white/10 pt-5 flex items-center gap-3 relative z-10">
+                                    <div className="flex items-center gap-3 relative z-10">
                                         {photoSrc && (
                                             <div className="relative w-11 h-11 rounded-full overflow-hidden ring-2 ring-brand-primary/30 flex-shrink-0">
                                                 <Image

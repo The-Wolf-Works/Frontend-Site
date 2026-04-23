@@ -89,6 +89,7 @@ const StepFinalise = ({ formData, reportData, onBack, onReset }: Props) => {
                         client_email: formData.clientEmail,
                         client_domain: formData.clientDomain,
                         prompt_title: formData.promptTitle,
+                        report_uuid: formData.uuid,
                     })
                 })
 
