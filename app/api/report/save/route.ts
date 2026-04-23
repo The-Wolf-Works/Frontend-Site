@@ -1,46 +1,48 @@
 import { NextRequest, NextResponse } from "next/server"
 import { wpFetch } from '@/lib/wp'
+import { ReportStructuredData } from '@/lib/types'
 
 interface SaveReportPayload {
-    html: string
+    reportData: ReportStructuredData
     clientName: string
     clientEmail: string
     clientDomain: string
     uuid: string
     promptId: number
+    promptTitle: string
     generatePDF: boolean
 }
 
 /**
   * Saves a generated report to WordPress
-  * @param req - { html, clientName, clientEmail, clientDomain, uuid, promptId, generatePDF }
+  * @param req - { reportData, clientName, clientEmail, clientDomain, uuid, promptId, generatePDF }
   * @returns { post_id, pdf_base64? }
  */
 export const POST = async (req: NextRequest) => {
     try {
         const {
-            html, clientName, clientEmail, clientDomain, uuid, promptId, generatePDF }: SaveReportPayload = await req.json()
+            reportData, clientName, clientEmail, clientDomain, uuid, promptId, promptTitle, generatePDF }: SaveReportPayload = await req.json()
 
-        if (!html || !clientName || !clientEmail || !clientDomain || !uuid || !promptId) {
+        if (!reportData || !clientName || !clientEmail || !clientDomain || !uuid || !promptId) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
         }
 
         const res = await wpFetch('/reports/save', {
             method: 'POST',
             body: JSON.stringify({
-                html,
+                report_data: reportData,
                 client_name: clientName,
                 client_email: clientEmail,
                 client_domain: clientDomain,
                 uuid,
                 prompt_id: promptId,
+                prompt_title: promptTitle,
                 generate_pdf: generatePDF
             })
         })
 
         if (!res.ok) {
             const errorData = await res.json().catch(() => null)
-            console.log('WP save error:', errorData)
             return NextResponse.json({ error: errorData?.message ?? 'Failed to save report' }, { status: 500 })
         }
 

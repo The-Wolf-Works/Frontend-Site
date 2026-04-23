@@ -1,7 +1,7 @@
 import { client } from '@/lib/client'
 import { GET_AI_REPORT_PROMPTS } from '@/lib/queries'
 import { GetAiReportPromptsResponse } from '@/lib/types'
-import ReportWizard from '@/app/components/report/ReportWizard'
+import ReportWizard from '@/app/components/report/report-generator/ReportWizard'
 
 /**
  * Report page component

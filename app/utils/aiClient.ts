@@ -7,15 +7,20 @@ export interface AIRequestOptions {
 }
 
 /**
- * Replace random characters created by AI response.
- * @param text
- * @returns text - stripped response
+ * Strip markdown code fences from AI response and extract JSON if present.
+ * Handles ```json, ```html, ``` or any other language identifier.
  */
 const stripMarkdownFences = (text: string): string => {
-    return text
-        .replace(/^```html\s*/i, '')
+    const stripped = text
+        .replace(/^```[a-zA-Z]*\s*/i, '')
         .replace(/\s*```[\s\S]*$/, '')
         .trim()
+
+    // If the stripped result looks like it contains a JSON object, extract it
+    const jsonMatch = stripped.match(/(\{[\s\S]*\})/)
+    if (jsonMatch) return jsonMatch[1]
+
+    return stripped
 }
 
 /**
@@ -33,7 +38,7 @@ const callAnthropic = async (options: AIRequestOptions): Promise<string> => {
         },
         body: JSON.stringify({
             model: options.model,
-            max_tokens: options.maxTokens ?? 4096,
+            max_tokens: options.maxTokens ?? 8192,
             temperature: 0.7,
             system: options.systemPrompt,
             messages: [
@@ -65,7 +70,7 @@ const callOpenAI = async (options: AIRequestOptions): Promise<string> => {
         },
         body: JSON.stringify({
             model: options.model,
-            max_completion_tokens: options.maxTokens ?? 4096,
+            max_completion_tokens: options.maxTokens ?? 8192,
             temperature: 0.7,
             messages: [
                 {

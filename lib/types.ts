@@ -201,3 +201,38 @@ export interface ReportFormData {
     uuid: string
 }
 
+// Structured report data returned by the AI
+export interface ConversionReadiness {
+    clarity: number
+    trust_signals: number
+    mobile_experience: number
+    conversion_structure: number
+    overall: number
+}
+export interface WolfScoreData {
+    score: number
+    summary: string
+    red_flags: string[]
+    leaky_bucket: string
+    strategic_pivot: string
+    recommendation: string
+}
+export interface ReportStructuredData {
+    executive_summary: string
+    quick_win: { title: string; description: string }
+    accessibility_view: string
+    client_view: string
+    revenue_view: string
+    conversion_readiness: ConversionReadiness
+    wolf_score: WolfScoreData
+    report_html: string
+}
+
+// Shape returned by the WP REST fetch-by-UUID endpoint
+export interface SiteReportResponse extends ReportStructuredData {
+    client_name: string
+    client_domain: string
+    report_generated_at?: string
+    report_prompt_title?: string
+}
+

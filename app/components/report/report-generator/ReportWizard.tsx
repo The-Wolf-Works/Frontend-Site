@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { AiReportPrompt, ReportFormData } from '@/lib/types'
+import { AiReportPrompt, ReportFormData, ReportStructuredData } from '@/lib/types'
 import StepForm from './StepForm'
 import StepGenerate from './StepGenerate'
 import StepFinalise from './StepFinalise'
@@ -53,11 +53,11 @@ const StepIndicator = ({ current }: { current: 1 | 2 | 3 }) => (
 const ReportWizard = ({ prompts }: Props) => {
     const [step, setStep] = useState<1 | 2 | 3>(1)
     const [formData, setFormData] = useState<ReportFormData | null>(null)
-    const [content, setContent] = useState<string>('')
+    const [reportData, setReportData] = useState<ReportStructuredData | null>(null)
 
     const handleReset = () => {
         setFormData(null)
-        setContent('')
+        setReportData(null)
         setStep(1)
     }
 
@@ -86,17 +86,17 @@ const ReportWizard = ({ prompts }: Props) => {
             {step === 2 && formData && (
                 <StepGenerate
                     formData={formData}
-                    initialContent={content}
-                    onContentChange={setContent}
+                    initialReportData={reportData}
+                    onReportDataChange={setReportData}
                     onBack={() => setStep(1)}
                     onNext={() => setStep(3)}
                 />
             )}
-            {step === 3 && formData && (
+            {step === 3 && formData && reportData && (
                 <div className="w-3/4">
                     <StepFinalise
                         formData={formData}
-                        content={content}
+                        reportData={reportData}
                         onBack={() => setStep(2)}
                         onReset={handleReset}
                     />
