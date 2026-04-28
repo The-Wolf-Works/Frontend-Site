@@ -11,6 +11,7 @@ import RedFlagsSection from '@/app/components/report/site-report/sections/RedFla
 import QuickWinSection from '@/app/components/report/site-report/sections/QuickWinSection'
 import NextSteps from '@/app/components/report/site-report/sections/NextSteps'
 import TestimonialsSection from '@/app/components/report/site-report/sections/TestimonialsSection'
+import ReportProgress from '@/app/components/report/site-report/ReportProgress'
 
 interface Props {
     params: Promise<{ uuid: string }>
@@ -32,6 +33,8 @@ const SiteReportPage = async ({ params }: Props) => {
     const score = report.wolf_score?.score ?? 0
 
     return (
+        <>
+        <ReportProgress />
         <div className="bg-brand-secondary">
             <HeroSection
                 clientName={report.client_name}
@@ -77,6 +80,7 @@ const SiteReportPage = async ({ params }: Props) => {
 
             <TestimonialsSection testimonials={testimonials} />
         </div>
+        </>
     )
 }
 

@@ -10,6 +10,11 @@ export const proxy = (request: NextRequest) => {
         return NextResponse.next();
     }
 
+    // Site reports are publicly accessible — the UUID is the auth
+    if (pathname.startsWith('/report/site-report')) {
+        return NextResponse.next();
+    }
+
     const token = searchParams.get('token');
     const accessToken = process.env.REPORT_ACCESS_TOKEN;
     const existingCookie = request.cookies.get(COOKIE_NAME);
