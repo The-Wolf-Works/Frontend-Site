@@ -1,61 +1,31 @@
 'use client'
 
-import Link from 'next/link'
 import { icons } from '@/app/components/icons/Icons'
 import useScrollInView from '@/app/hooks/useScrollInView'
 import { DotGrid } from '@/app/components/report/site-report/SectionLabel'
+import { ServicePackage } from '@/lib/types'
 
-interface NextStepOption {
-    title: string
-    price: string
-    priceNote: string
-    features: string[]
-    ctaLabel: string
-    ctaHref: string
-    featured?: boolean
+interface Props {
+    packages: ServicePackage[]
 }
 
-const options: NextStepOption[] = [
-    {
-        title: 'The Full Blueprint',
-        price: '£97',
-        priceNote: 'one-off',
-        features: [
-            'Complete website strategy report',
-            '5-in-competition benchmarking sessions',
-            'Website security & performance review',
-            'Copywriting recommendations',
-            'SEO audit & quick wins',
-            'Traffic & conversion optimisation',
-        ],
-        ctaLabel: 'Get Started',
-        ctaHref: '/#contact',
-    },
-    {
-        title: 'The Wolf Pack',
-        price: 'Free',
-        priceNote: 'to get started',
-        features: [
-            'Website maintenance & performance monitoring',
-            'Ongoing content & conversion testing',
-            'Priority support',
-            'Access to all premium resources',
-        ],
-        ctaLabel: 'Get Started',
-        ctaHref: '/#contact',
-        featured: true,
-    },
-]
-
 /**
- * Closing section presenting the two next-step options for the client.
- * Pricing cards are hardcoded in this file — update the `options` array to change them.
- * Cards stack on mobile and spread into a 2-column grid on desktop.
+ * Closing section presenting service packages fetched from WordPress.
+ * Each card is driven by the service_package CPT — update packages in the WP admin.
+ * Cards stack on mobile and spread into a 2- or 3-column grid on desktop.
  * The featured card is highlighted with a brand-primary gradient border.
+ *
+ * @param packages - Array of service packages from the WP GraphQL API, sorted by order
  */
-const NextSteps = () => {
+const NextSteps = ({ packages }: Props) => {
     const { ref, fadeUp } = useScrollInView()
-    const cols = options.length === 1 ? 'grid-cols-1 max-w-sm' : options.length === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 md:grid-cols-3'
+
+    const sorted = [...packages].sort((a, b) => a.packageDetails.order - b.packageDetails.order)
+
+    const cols =
+        sorted.length === 1 ? 'grid-cols-1 max-w-sm' :
+        sorted.length === 2 ? 'grid-cols-1 md:grid-cols-2' :
+        'grid-cols-1 md:grid-cols-3'
 
     return (
         <section ref={ref} id="next-steps" className="min-h-screen flex flex-col border-t border-white/10 px-10 md:px-16 py-24 relative" style={{ background: 'rgba(0,0,0,0.15)' }}>
@@ -75,67 +45,83 @@ const NextSteps = () => {
 
                 {/* Cards */}
                 <div className={`grid ${cols} gap-6 flex-1 items-stretch`}>
-                    {options.map((option, i) => (
-                        <div
-                            key={option.title}
-                            className={`rounded-2xl p-8 flex flex-col gap-8 relative overflow-hidden ${
-                                option.featured ? 'border border-brand-primary/30' : 'border border-white/10'
-                            }`}
-                            style={{
-                                background: option.featured
-                                    ? 'linear-gradient(135deg, rgba(94,252,141,0.08) 0%, rgba(0,207,224,0.05) 100%)'
-                                    : 'rgba(255,255,255,0.03)',
-                                ...fadeUp(100 + i * 100),
-                            }}
-                        >
-                            {option.featured && (
-                                <div
-                                    className="absolute top-4 right-4 text-xs font-semibold tracking-widest uppercase px-3 py-1 rounded-full"
-                                    style={{ background: 'rgba(94,252,141,0.12)', color: '#5EFC8D' }}
-                                >
-                                    Recommended
-                                </div>
-                            )}
+                    {sorted.map((pkg, i) => {
+                        const { subtitle, featured, featuredLabel, price, currencySymbol, originalPrice, billingType, features, ctaLabel } = pkg.packageDetails
+                        const currency = currencySymbol || '£'
+                        const isFree = billingType === 'free' || !price
+                        const displayPrice = isFree ? 'Free' : `${currency}${price}`
+                        const isFeatured = !!featured
 
-                            {/* Title + price */}
-                            <div className="flex flex-col gap-3">
-                                <p className="text-xs font-semibold tracking-widest uppercase text-white/30">
-                                    Option {String(i + 1).padStart(2, '0')}
-                                </p>
-                                <h3 className="text-xl font-bold text-white">{option.title}</h3>
-                                <div className="flex items-baseline gap-1.5">
-                                    <span className={`text-4xl font-extrabold ${option.featured ? 'text-brand-primary' : 'text-white'}`}>
-                                        {option.price}
-                                    </span>
-                                    <span className="text-white/35 text-sm">{option.priceNote}</span>
-                                </div>
-                            </div>
-
-                            {/* Features */}
-                            <ul className="flex flex-col gap-3 flex-1">
-                                {option.features.map(feature => (
-                                    <li key={feature} className="flex items-start gap-3">
-                                        <icons.check className="w-4 h-4 text-brand-primary shrink-0 mt-0.5" />
-                                        <span className={`text-sm leading-relaxed ${option.featured ? 'text-white/70' : 'text-white/55'}`}>
-                                            {feature}
-                                        </span>
-                                    </li>
-                                ))}
-                            </ul>
-
-                            {/* CTA */}
-                            <Link
-                                href={option.ctaHref}
-                                className={`block text-center font-semibold px-6 py-3.5 rounded-xl text-sm transition-all ${
-                                    option.featured
-                                        ? 'bg-brand-primary text-brand-secondary hover:opacity-90'
-                                        : 'border border-white/15 text-white hover:border-white/30 hover:bg-white/5'
+                        return (
+                            <div
+                                key={pkg.databaseId}
+                                className={`rounded-2xl p-8 flex flex-col gap-8 relative overflow-hidden ${
+                                    isFeatured ? 'border border-brand-primary/30' : 'border border-white/10'
                                 }`}
+                                style={{
+                                    background: isFeatured
+                                        ? 'linear-gradient(135deg, rgba(94,252,141,0.08) 0%, rgba(0,207,224,0.05) 100%)'
+                                        : 'rgba(255,255,255,0.03)',
+                                    ...fadeUp(100 + i * 100),
+                                }}
                             >
-                                {option.ctaLabel}
-                            </Link>
-                        </div>
-                    ))}
+                                {isFeatured && featuredLabel && (
+                                    <div
+                                        className="absolute top-4 right-4 text-xs font-semibold tracking-widest uppercase px-3 py-1 rounded-full"
+                                        style={{ background: 'rgba(94,252,141,0.12)', color: '#5EFC8D' }}
+                                    >
+                                        {featuredLabel}
+                                    </div>
+                                )}
+
+                                {/* Title + price */}
+                                <div className="flex flex-col gap-3">
+                                    <p className="text-xs font-semibold tracking-widest uppercase text-white/30">
+                                        Option {String(i + 1).padStart(2, '0')}
+                                    </p>
+                                    <h3 className="text-xl font-bold text-white">{pkg.title}</h3>
+                                    {subtitle && (
+                                        <p className="text-white/40 text-sm">{subtitle}</p>
+                                    )}
+                                    <div className="flex items-baseline gap-2">
+                                        <span className={`text-4xl font-extrabold ${isFeatured ? 'text-brand-primary' : 'text-white'}`}>
+                                            {displayPrice}
+                                        </span>
+                                        {originalPrice != null && originalPrice > 0 && (
+                                            <span className="text-white/30 text-lg line-through">{currency}{originalPrice}</span>
+                                        )}
+                                        {billingType && !isFree && (
+                                            <span className="text-white/35 text-sm">{billingType}</span>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Features */}
+                                <ul className="flex flex-col gap-3 flex-1">
+                                    {features.map((f, fi) => (
+                                        <li key={fi} className="flex items-start gap-3">
+                                            <icons.check className="w-4 h-4 text-brand-primary shrink-0 mt-0.5" />
+                                            <span className={`text-sm leading-relaxed ${isFeatured ? 'text-white/70' : 'text-white/55'}`}>
+                                                {f.text}
+                                            </span>
+                                        </li>
+                                    ))}
+                                </ul>
+
+                                {/* CTA — onClick wired in TWW-218 */}
+                                <button
+                                    type="button"
+                                    className={`w-full text-center font-semibold px-6 py-3.5 rounded-xl text-sm transition-all cursor-pointer ${
+                                        isFeatured
+                                            ? 'bg-brand-primary text-brand-secondary hover:opacity-90'
+                                            : 'border border-white/15 text-white hover:border-white/30 hover:bg-white/5'
+                                    }`}
+                                >
+                                    {ctaLabel}
+                                </button>
+                            </div>
+                        )
+                    })}
                 </div>
             </div>
         </section>

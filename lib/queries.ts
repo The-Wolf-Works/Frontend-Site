@@ -214,6 +214,33 @@ export const GET_TESTIMONIALS = gql`
     }
 `
 
+// Service Packages
+export const GET_SERVICE_PACKAGES = gql`
+    query GetServicePackages {
+        servicePackages(first: 100) {
+            nodes {
+                databaseId
+                title
+                packageDetails {
+                    subtitle
+                    featured
+                    featuredLabel
+                    price
+                    currencySymbol
+                    originalPrice
+                    features {
+                        text
+                    }
+                    billingType
+                    ctaLabel
+                    ctaBehaviour
+                    order
+                }
+            }
+        }
+    }
+`
+
 // AI Report Prompts
 export const GET_AI_REPORT_PROMPTS = gql`
     query GetAiReportPrompts {

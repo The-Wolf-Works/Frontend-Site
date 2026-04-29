@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation'
 import { wpFetch } from '@/lib/wp'
 import { client } from '@/lib/client'
-import { GET_TESTIMONIALS } from '@/lib/queries'
-import { SiteReportResponse, GetTestimonialsResponse } from '@/lib/types'
+import { GET_TESTIMONIALS, GET_SERVICE_PACKAGES } from '@/lib/queries'
+import { SiteReportResponse, GetTestimonialsResponse, GetServicePackagesResponse } from '@/lib/types'
 import HeroSection from '@/app/components/report/site-report/sections/HeroSection'
 import WolfScoreSection from '@/app/components/report/site-report/sections/WolfScoreSection'
 import ConversionSection from '@/app/components/report/site-report/sections/ConversionSection'
@@ -20,15 +20,17 @@ interface Props {
 const SiteReportPage = async ({ params }: Props) => {
     const { uuid } = await params
 
-    const [res, testimonialsData] = await Promise.all([
+    const [res, testimonialsData, packagesData] = await Promise.all([
         wpFetch(`/reports/by-uuid/${uuid}`),
         client.request<GetTestimonialsResponse>(GET_TESTIMONIALS).catch(() => null),
+        client.request<GetServicePackagesResponse>(GET_SERVICE_PACKAGES).catch(() => null),
     ])
 
     if (!res.ok) notFound()
 
     const report: SiteReportResponse = await res.json()
     const testimonials = testimonialsData?.testimonials.nodes.map(n => n.testimonials) ?? []
+    const packages = packagesData?.servicePackages.nodes ?? []
 
     const score = report.wolf_score?.score ?? 0
 
@@ -76,7 +78,7 @@ const SiteReportPage = async ({ params }: Props) => {
                 />
             )}
 
-            <NextSteps />
+            <NextSteps packages={packages} />
 
             <TestimonialsSection testimonials={testimonials} />
         </div>

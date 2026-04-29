@@ -174,6 +174,30 @@ export interface GetTestimonialsResponse {
     }
 }
 
+// Service Packages
+export interface ServicePackage {
+    databaseId: number
+    title: string
+    packageDetails: {
+        subtitle: string | null
+        featured: boolean
+        featuredLabel: string | null
+        price: number
+        currencySymbol: string | null
+        originalPrice: number | null
+        features: Array<{ text: string }>
+        billingType: 'one-off' | 'monthly' | 'free' | null
+        ctaLabel: string
+        ctaBehaviour: 'confirm' | 'enquire'
+        order: number
+    }
+}
+export interface GetServicePackagesResponse {
+    servicePackages: {
+        nodes: ServicePackage[]
+    }
+}
+
 // AI Report Prompts
 export interface AiReportPrompt {
     databaseId: number
