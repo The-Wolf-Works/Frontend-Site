@@ -1,12 +1,17 @@
 'use client'
 
+import { useState } from 'react'
 import { icons } from '@/app/components/icons/Icons'
 import useScrollInView from '@/app/hooks/useScrollInView'
 import { DotGrid } from '@/app/components/report/site-report/SectionLabel'
+import { useModal } from '@/app/hooks/useModal'
 import { ServicePackage } from '@/lib/types'
 
 interface Props {
     packages: ServicePackage[]
+    reportUuid: string
+    clientName: string
+    clientEmail: string
 }
 
 /**
@@ -15,10 +20,15 @@ interface Props {
  * Cards stack on mobile and spread into a 2- or 3-column grid on desktop.
  * The featured card is highlighted with a brand-primary gradient border.
  *
- * @param packages - Array of service packages from the WP GraphQL API, sorted by order
+ * @param packages   - Array of service packages from the WP GraphQL API, sorted by order
+ * @param reportUuid  - UUID of the current report, passed to the enquiry modal
+ * @param clientName  - Client name from the report, used to pre-fill the enquiry form
+ * @param clientEmail - Client email from the report, used to pre-fill the enquiry form
  */
-const NextSteps = ({ packages }: Props) => {
+const NextSteps = ({ packages, reportUuid, clientName, clientEmail }: Props) => {
     const { ref, fadeUp } = useScrollInView()
+    const { openModal } = useModal()
+    const [loadingId, setLoadingId] = useState<number | null>(null)
 
     const sorted = [...packages].sort((a, b) => a.packageDetails.order - b.packageDetails.order)
 
@@ -26,6 +36,49 @@ const NextSteps = ({ packages }: Props) => {
         sorted.length === 1 ? 'grid-cols-1 max-w-sm' :
         sorted.length === 2 ? 'grid-cols-1 md:grid-cols-2' :
         'grid-cols-1 md:grid-cols-3'
+
+    const handleCta = async (pkg: ServicePackage) => {
+        const { packageDetails, databaseId, title } = pkg
+        const { ctaBehaviour, billingType, price, currencySymbol } = packageDetails
+        const currency = currencySymbol || '£'
+        const isFree = billingType === 'free' || !price
+        const displayPrice = isFree ? 'Free' : `${currency}${price}`
+
+        const modalData = {
+            packageTitle: title,
+            packagePrice: displayPrice,
+            billingType: billingType ?? '',
+            ctaBehaviour,
+            reportUuid,
+            clientName,
+            clientEmail,
+        }
+
+        if (ctaBehaviour === 'enquire') {
+            openModal('package-enquiry', modalData)
+            return
+        }
+
+        // Confirm mode — fire email immediately, then open confirmation modal
+        setLoadingId(databaseId)
+        try {
+            await fetch('/api/package-enquiry', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    packageTitle: title,
+                    packagePrice: displayPrice,
+                    billingType: billingType ?? '',
+                    ctaBehaviour,
+                    reportUuid,
+                    clientName,
+                }),
+            })
+        } finally {
+            setLoadingId(null)
+            openModal('package-enquiry', modalData)
+        }
+    }
 
     return (
         <section ref={ref} id="next-steps" className="min-h-screen flex flex-col border-t border-white/10 px-10 md:px-16 py-24 relative" style={{ background: 'rgba(0,0,0,0.15)' }}>
@@ -51,6 +104,7 @@ const NextSteps = ({ packages }: Props) => {
                         const isFree = billingType === 'free' || !price
                         const displayPrice = isFree ? 'Free' : `${currency}${price}`
                         const isFeatured = !!featured
+                        const isLoading = loadingId === pkg.databaseId
 
                         return (
                             <div
@@ -108,16 +162,18 @@ const NextSteps = ({ packages }: Props) => {
                                     ))}
                                 </ul>
 
-                                {/* CTA — onClick wired in TWW-218 */}
+                                {/* CTA */}
                                 <button
                                     type="button"
-                                    className={`w-full text-center font-semibold px-6 py-3.5 rounded-xl text-sm transition-all cursor-pointer ${
+                                    onClick={() => handleCta(pkg)}
+                                    disabled={isLoading}
+                                    className={`w-full text-center font-semibold px-6 py-3.5 rounded-xl text-sm transition-all cursor-pointer disabled:opacity-50 ${
                                         isFeatured
                                             ? 'bg-brand-primary text-brand-secondary hover:opacity-90'
                                             : 'border border-white/15 text-white hover:border-white/30 hover:bg-white/5'
                                     }`}
                                 >
-                                    {ctaLabel}
+                                    {isLoading ? 'Sending...' : ctaLabel}
                                 </button>
                             </div>
                         )
