@@ -255,8 +255,10 @@ export interface ReportStructuredData {
 // Shape returned by the WP REST fetch-by-UUID endpoint
 export interface SiteReportResponse extends ReportStructuredData {
     client_name: string
+    client_email: string
     client_domain: string
     report_generated_at?: string
     report_prompt_title?: string
+    actioned_packages: number[]
 }
 

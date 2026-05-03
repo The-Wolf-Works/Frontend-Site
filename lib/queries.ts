@@ -175,7 +175,7 @@ export const GET_PRICING_GUIDE = gql`
 // Email templates
 export const GET_EMAIL_TEMPLATES = gql`
     query GetEmailTemplates {
-        emailTemplates {
+        emailTemplates(first: 100) {
             nodes {
                 slug
                 title

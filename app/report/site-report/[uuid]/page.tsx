@@ -78,7 +78,7 @@ const SiteReportPage = async ({ params }: Props) => {
                 />
             )}
 
-            <NextSteps packages={packages} />
+            <NextSteps packages={packages} reportUuid={uuid} clientName={report.client_name} clientEmail={report.client_email} clientDomain={report.client_domain} actionedPackages={report.actioned_packages ?? []} />
 
             <TestimonialsSection testimonials={testimonials} />
         </div>
