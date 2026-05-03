@@ -259,5 +259,6 @@ export interface SiteReportResponse extends ReportStructuredData {
     client_domain: string
     report_generated_at?: string
     report_prompt_title?: string
+    actioned_packages: number[]
 }
 

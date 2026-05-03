@@ -12,6 +12,8 @@ interface Props {
     reportUuid: string
     clientName: string
     clientEmail: string
+    clientDomain: string
+    actionedPackages: number[]
 }
 
 /**
@@ -25,10 +27,11 @@ interface Props {
  * @param clientName  - Client name from the report, used to pre-fill the enquiry form
  * @param clientEmail - Client email from the report, used to pre-fill the enquiry form
  */
-const NextSteps = ({ packages, reportUuid, clientName, clientEmail }: Props) => {
+const NextSteps = ({ packages, reportUuid, clientName, clientEmail, clientDomain, actionedPackages }: Props) => {
     const { ref, fadeUp } = useScrollInView()
     const { openModal } = useModal()
     const [loadingId, setLoadingId] = useState<number | null>(null)
+    const [clickedIds, setClickedIds] = useState<number[]>(actionedPackages)
 
     const sorted = [...packages].sort((a, b) => a.packageDetails.order - b.packageDetails.order)
 
@@ -44,18 +47,22 @@ const NextSteps = ({ packages, reportUuid, clientName, clientEmail }: Props) => 
         const isFree = billingType === 'free' || !price
         const displayPrice = isFree ? 'Free' : `${currency}${price}`
 
+        const normalisedBehaviour = String(ctaBehaviour ?? '').toLowerCase()
+
         const modalData = {
             packageTitle: title,
             packagePrice: displayPrice,
             billingType: billingType ?? '',
-            ctaBehaviour,
+            ctaBehaviour: normalisedBehaviour,
             reportUuid,
             clientName,
             clientEmail,
+            clientDomain,
         }
 
-        if (ctaBehaviour === 'enquire') {
-            openModal('package-enquiry', modalData)
+        if (normalisedBehaviour === 'enquire') {
+            setClickedIds(prev => [...prev, databaseId])
+            openModal('package-enquiry', { ...modalData, packageId: String(databaseId) })
             return
         }
 
@@ -69,13 +76,17 @@ const NextSteps = ({ packages, reportUuid, clientName, clientEmail }: Props) => 
                     packageTitle: title,
                     packagePrice: displayPrice,
                     billingType: billingType ?? '',
-                    ctaBehaviour,
+                    ctaBehaviour: normalisedBehaviour,
                     reportUuid,
+                    packageId: databaseId,
                     clientName,
+                    clientEmail,
+                    clientDomain,
                 }),
             })
         } finally {
             setLoadingId(null)
+            setClickedIds(prev => [...prev, databaseId])
             openModal('package-enquiry', modalData)
         }
     }
@@ -105,6 +116,7 @@ const NextSteps = ({ packages, reportUuid, clientName, clientEmail }: Props) => 
                         const displayPrice = isFree ? 'Free' : `${currency}${price}`
                         const isFeatured = !!featured
                         const isLoading = loadingId === pkg.databaseId
+                        const isClicked = clickedIds.includes(pkg.databaseId)
 
                         return (
                             <div
@@ -166,14 +178,16 @@ const NextSteps = ({ packages, reportUuid, clientName, clientEmail }: Props) => 
                                 <button
                                     type="button"
                                     onClick={() => handleCta(pkg)}
-                                    disabled={isLoading}
-                                    className={`w-full text-center font-semibold px-6 py-3.5 rounded-xl text-sm transition-all cursor-pointer disabled:opacity-50 ${
+                                    disabled={isLoading || isClicked}
+                                    className={`w-full text-center font-semibold px-6 py-3.5 rounded-xl text-sm transition-all disabled:cursor-not-allowed disabled:opacity-40 ${
+                                        isClicked ? 'cursor-not-allowed' : 'cursor-pointer'
+                                    } ${
                                         isFeatured
                                             ? 'bg-brand-primary text-brand-secondary hover:opacity-90'
                                             : 'border border-white/15 text-white hover:border-white/30 hover:bg-white/5'
                                     }`}
                                 >
-                                    {isLoading ? 'Sending...' : ctaLabel}
+                                    {isLoading ? 'Sending...' : isClicked ? 'Done' : ctaLabel}
                                 </button>
                             </div>
                         )

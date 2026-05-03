@@ -5,6 +5,7 @@ import { client } from '@/lib/client'
 import { GET_EMAIL_TEMPLATES } from '@/lib/queries'
 import WPEmailTemplate from '@/app/emails/WPEmailTemplate'
 import { replacePlaceholders } from '@/app/utils/stringReplacement'
+import { wpFetch } from '@/lib/wp'
 
 const postmark = new ServerClient(process.env.POSTMARK_API_KEY!)
 
@@ -31,8 +32,10 @@ export const POST = async (req: NextRequest) => {
         billingType,
         ctaBehaviour,
         reportUuid,
+        packageId,
         clientName,
         clientEmail,
+        clientDomain,
         phone,
         comments,
     } = await req.json()
@@ -53,6 +56,7 @@ export const POST = async (req: NextRequest) => {
         billing_type:    billingType ?? '',
         client_name:     clientName ?? '',
         client_email:    clientEmail,
+        client_domain:   clientDomain ?? '',
         phone:           phone ?? '',
         comments:        comments ?? '',
         report_url:      reportUrl,
@@ -75,6 +79,26 @@ export const POST = async (req: NextRequest) => {
             stream: process.env.POSTMARK_STREAM_REPORTS!,
             from: process.env.POSTMARK_FROM_REPORTS!,
         },
+    }
+
+    // Try to fetch the report PDF — non-blocking, skipped if unavailable
+    let pdfAttachment: { Name: string; Content: string; ContentType: string } | null = null
+    if (reportUuid) {
+        try {
+            const pdfRes = await wpFetch(`/reports/pdf-by-uuid/${reportUuid}`)
+            if (pdfRes.ok) {
+                const pdfData = await pdfRes.json()
+                if (pdfData.pdf_base64) {
+                    pdfAttachment = {
+                        Name: pdfData.filename ?? 'site-report.pdf',
+                        Content: pdfData.pdf_base64,
+                        ContentType: 'application/pdf',
+                    }
+                }
+            }
+        } catch {
+            // No PDF available — continue without attachment
+        }
     }
 
     const data = await client.request<EmailTemplateResponse>(GET_EMAIL_TEMPLATES)
@@ -100,9 +124,18 @@ export const POST = async (req: NextRequest) => {
                 Subject: subject,
                 HtmlBody: html,
                 MessageStream: stream,
+                ...(pdfAttachment && emailType !== 'admin' ? { Attachments: [pdfAttachment] } : {}),
             })
         })
     )
+
+    // Record the action against the report — non-blocking
+    if (reportUuid && packageId) {
+        wpFetch('/reports/action-package', {
+            method: 'POST',
+            body: JSON.stringify({ uuid: reportUuid, package_id: Number(packageId) }),
+        }).catch(() => {})
+    }
 
     return NextResponse.json({ success: true })
 }

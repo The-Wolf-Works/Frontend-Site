@@ -25,8 +25,10 @@ const PackageEnquiry = ({ data }: ModalContentProps) => {
         billingType,
         ctaBehaviour,
         reportUuid,
+        packageId,
         clientName,
         clientEmail,
+        clientDomain,
     } = data
 
     const displayPrice = !packagePrice || packagePrice === '0' ? 'Free' : packagePrice
@@ -53,8 +55,10 @@ const PackageEnquiry = ({ data }: ModalContentProps) => {
                     billingType,
                     ctaBehaviour,
                     reportUuid,
+                    packageId,
                     clientName: form.name,
                     clientEmail: form.email,
+                    clientDomain,
                     phone: form.phone,
                     comments: form.comments,
                 }),
