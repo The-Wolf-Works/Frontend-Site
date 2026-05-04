@@ -82,7 +82,7 @@ export const POST = async (req: NextRequest) => {
     }
 
     // Try to fetch the report PDF — non-blocking, skipped if unavailable
-    let pdfAttachment: { Name: string; Content: string; ContentType: string } | null = null
+    let pdfAttachment: { Name: string; Content: string; ContentType: string; ContentID: string } | null = null
     if (reportUuid) {
         try {
             const pdfRes = await wpFetch(`/reports/pdf-by-uuid/${reportUuid}`)
@@ -93,6 +93,7 @@ export const POST = async (req: NextRequest) => {
                         Name: pdfData.filename ?? 'site-report.pdf',
                         Content: pdfData.pdf_base64,
                         ContentType: 'application/pdf',
+                        ContentID: '',
                     }
                 }
             }
