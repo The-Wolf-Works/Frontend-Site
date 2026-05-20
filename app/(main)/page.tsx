@@ -38,7 +38,14 @@ const Home = async () => {
     const pricingGuide = pricingGuideData.nodeByUri?.pricingGuideBlock
     const whyTheWolfWorks = whyTheWolfWorksData.nodeByUri?.whyTheWolfWorksBlock
     const aboutTheWolfPack = aboutTheWolfPackData.nodeByUri?.wolfPackBlock
-    const testimonials = testimonialsData.testimonials.nodes.map(n => n.testimonials)
+    const testimonials = testimonialsData.testimonials.nodes.map(n => ({
+        clientName: n.title,
+        photo: n.featuredImage ?? null,
+        quote: n.testimonials.quote,
+        businessType: n.testimonials.businessType ?? '',
+        company: n.testimonials.company ?? '',
+        reviewDate: n.testimonials.reviewDate ?? '',
+    }))
 
     return (
         <>
