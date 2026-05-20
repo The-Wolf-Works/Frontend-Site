@@ -195,19 +195,18 @@ export const GET_TESTIMONIALS = gql`
     query GetTestimonials {
         testimonials {
             nodes {
-                slug
                 title
+                featuredImage {
+                    node {
+                        altText
+                        sourceUrl
+                    }
+                }
                 testimonials {
                     quote
-                    clientName
-                    jobTitle
+                    reviewDate
+                    businessType
                     company
-                    photo {
-                        node {
-                            sourceUrl
-                            altText
-                        }
-                    }
                 }
             }
         }

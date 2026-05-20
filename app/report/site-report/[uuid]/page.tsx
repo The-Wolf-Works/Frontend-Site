@@ -29,7 +29,14 @@ const SiteReportPage = async ({ params }: Props) => {
     if (!res.ok) notFound()
 
     const report: SiteReportResponse = await res.json()
-    const testimonials = testimonialsData?.testimonials.nodes.map(n => n.testimonials) ?? []
+    const testimonials = testimonialsData?.testimonials.nodes.map(n => ({
+        clientName: n.title,
+        photo: n.featuredImage ?? null,
+        quote: n.testimonials.quote,
+        businessType: n.testimonials.businessType ?? '',
+        company: n.testimonials.company ?? '',
+        reviewDate: n.testimonials.reviewDate ?? '',
+    })) ?? []
     const packages = packagesData?.servicePackages.nodes ?? []
 
     const score = report.wolf_score?.score ?? 0

@@ -157,7 +157,8 @@ export interface GetPricingGuideResponse {
 export interface Testimonial {
     quote: string
     clientName: string
-    role: string
+    reviewDate: string
+    businessType: string
     company: string
     photo: {
         node: {
@@ -169,7 +170,14 @@ export interface Testimonial {
 export interface GetTestimonialsResponse {
     testimonials: {
         nodes: Array<{
-            testimonials: Testimonial
+            title: string
+            featuredImage: FeaturedImage | null
+            testimonials: {
+                quote: string
+                reviewDate: string | null
+                businessType: string | null
+                company: string | null
+            }
         }>
     }
 }

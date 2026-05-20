@@ -93,8 +93,8 @@ export default function Testimonials({ testimonials, slidesPerView, placeholderP
             >
                 <div className="flex ml-[-24px]">
                     {testimonials.map((t, index) => {
-                        const photoSrc = t.photo?.node?.sourceUrl ?? placeholderPhoto
-                        const photoAlt = t.photo?.node?.altText || t.clientName
+                        const photoSrc = t.photo?.node.sourceUrl ?? placeholderPhoto
+                        const photoAlt = t.photo?.node.altText || t.clientName
 
                         return (
                             <div
@@ -130,7 +130,7 @@ export default function Testimonials({ testimonials, slidesPerView, placeholderP
                                         <div>
                                             <p className="text-white font-bold text-sm">{t.clientName}</p>
                                             <p className="text-brand-primary/70 text-xs mt-0.5">
-                                                {[t.role, t.company].filter(Boolean).join(' · ')}
+                                                {[t.businessType, t.company].filter(Boolean).join(' · ')}
                                             </p>
                                         </div>
                                     </div>
