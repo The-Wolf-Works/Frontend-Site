@@ -6,8 +6,6 @@ import { GET_EMAIL_TEMPLATES } from '@/lib/queries'
 import WPEmailTemplate from '@/app/emails/WPEmailTemplate'
 import { replacePlaceholders } from '@/app/utils/stringReplacement'
 
-const postmark = new ServerClient(process.env.POSTMARK_API_KEY!)
-
 interface EmailTemplates {
     slug: string
     emailTemplates: {
@@ -41,6 +39,7 @@ const verifyRecaptcha = async (token: string): Promise<boolean> => {
 
 // Send email using Postmark
 export const POST = async (req: NextRequest) => {
+    const postmark = new ServerClient(process.env.POSTMARK_API_KEY!)
     const { formType, requiredFields, recaptchaToken, name, email, ...rest } = await req.json()
 
     const formData = {
