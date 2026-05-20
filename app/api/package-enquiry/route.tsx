@@ -7,8 +7,6 @@ import WPEmailTemplate from '@/app/emails/WPEmailTemplate'
 import { replacePlaceholders } from '@/app/utils/stringReplacement'
 import { wpFetch } from '@/lib/wp'
 
-const postmark = new ServerClient(process.env.POSTMARK_API_KEY!)
-
 interface EmailTemplates {
     slug: string
     emailTemplates: {
@@ -26,6 +24,7 @@ interface EmailTemplateResponse {
 }
 
 export const POST = async (req: NextRequest) => {
+    const postmark = new ServerClient(process.env.POSTMARK_API_KEY!)
     const {
         packageTitle,
         packagePrice,
