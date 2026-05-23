@@ -9,6 +9,7 @@ import ConversionSection from '@/app/components/report/site-report/sections/Conv
 import PillarsSection from '@/app/components/report/site-report/sections/PillarsSection'
 import RedFlagsSection from '@/app/components/report/site-report/sections/RedFlagsSection'
 import QuickWinSection from '@/app/components/report/site-report/sections/QuickWinSection'
+import AiEdgeSection from '@/app/components/report/site-report/sections/AiEdgeSection'
 import NextSteps from '@/app/components/report/site-report/sections/NextSteps'
 import TestimonialsSection from '@/app/components/report/site-report/sections/TestimonialsSection'
 import ReportProgress from '@/app/components/report/site-report/ReportProgress'
@@ -83,6 +84,10 @@ const SiteReportPage = async ({ params }: Props) => {
                     recommendation={report.wolf_score.recommendation}
                     strategicPivot={report.wolf_score.strategic_pivot}
                 />
+            )}
+
+            {report.ai_edge && (
+                <AiEdgeSection data={report.ai_edge} />
             )}
 
             <NextSteps packages={packages} reportUuid={uuid} clientName={report.client_name} clientEmail={report.client_email} clientDomain={report.client_domain} actionedPackages={report.actioned_packages ?? []} />
