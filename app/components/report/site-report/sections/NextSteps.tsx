@@ -101,7 +101,7 @@ const NextSteps = ({ packages, reportUuid, clientName, clientEmail, clientDomain
     }
 
     return (
-        <section ref={ref} id="next-steps" className="min-h-screen flex flex-col border-t border-white/10 px-10 md:px-16 py-24 relative" style={{ background: 'rgba(0,0,0,0.15)' }}>
+        <section ref={ref} id="next-steps" className="min-h-screen flex flex-col border-t border-white/10 px-10 md:px-16 py-24 relative overflow-x-hidden" style={{ background: 'rgba(0,0,0,0.15)' }}>
 
             {/* Background */}
             <DotGrid />

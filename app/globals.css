@@ -14,7 +14,7 @@
     --color-brand-primary: #5EFC8D;
     --color-brand-secondary: #263038;
     --color-brand-accent: #00cfe0;
-    --nav-height: 140px;
+    --nav-height: 108px;
 }
 
 /* Frosted Blue = #8EDCE6 */
@@ -27,7 +27,12 @@
 .carousel-mask {
     mask-image: none;
 }
+
+
 @media (min-width: 1000px) {
+    :root {
+        --nav-height: 156px;
+    }
     .carousel-mask {
         mask-image: linear-gradient(to right, transparent, black 40%, black 60%, transparent);
     }
