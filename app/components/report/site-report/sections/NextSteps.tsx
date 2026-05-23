@@ -42,7 +42,7 @@ const NextSteps = ({ packages, reportUuid, clientName, clientEmail, clientDomain
 
     const handleCta = async (pkg: ServicePackage) => {
         const { packageDetails, databaseId, title } = pkg
-        const { ctaBehaviour, billingType, price, currencySymbol } = packageDetails
+        const { ctaBehaviour, billingType, price, currencySymbol, ctaFormId } = packageDetails
         const currency = currencySymbol || '£'
         const isFree = billingType === 'free' || !price
         const displayPrice = isFree ? 'Free' : `${currency}${price}`
@@ -54,6 +54,7 @@ const NextSteps = ({ packages, reportUuid, clientName, clientEmail, clientDomain
             packagePrice: displayPrice,
             billingType: billingType ?? '',
             ctaBehaviour: normalisedBehaviour,
+            ctaFormId: ctaFormId ?? '',
             reportUuid,
             clientName,
             clientEmail,
@@ -110,7 +111,7 @@ const NextSteps = ({ packages, reportUuid, clientName, clientEmail, clientDomain
                 {/* Cards */}
                 <div className={`grid ${cols} gap-6 flex-1 items-stretch`}>
                     {sorted.map((pkg, i) => {
-                        const { subtitle, featured, featuredLabel, price, currencySymbol, originalPrice, billingType, features, ctaLabel } = pkg.packageDetails
+                        const { subtitle, featured, featuredLabel, price, currencySymbol, originalPrice, billingType, features, ctaLabel, ctaId } = pkg.packageDetails
                         const currency = currencySymbol || '£'
                         const isFree = billingType === 'free' || !price
                         const displayPrice = isFree ? 'Free' : `${currency}${price}`
@@ -176,6 +177,7 @@ const NextSteps = ({ packages, reportUuid, clientName, clientEmail, clientDomain
 
                                 {/* CTA */}
                                 <button
+                                    id={ctaId || undefined}
                                     type="button"
                                     onClick={() => handleCta(pkg)}
                                     disabled={isLoading || isClicked}

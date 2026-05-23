@@ -196,7 +196,9 @@ export interface ServicePackage {
         features: Array<{ text: string }>
         billingType: 'one-off' | 'monthly' | 'free' | null
         ctaLabel: string
+        ctaId: string
         ctaBehaviour: 'confirm' | 'enquire'
+        ctaFormId: string | null
         order: number
     }
 }

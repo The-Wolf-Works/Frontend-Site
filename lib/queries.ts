@@ -232,7 +232,9 @@ export const GET_SERVICE_PACKAGES = gql`
                     }
                     billingType
                     ctaLabel
+                  	ctaId
                     ctaBehaviour
+                  	ctaFormId
                     order
                 }
             }

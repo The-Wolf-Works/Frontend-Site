@@ -24,6 +24,7 @@ const PackageEnquiry = ({ data }: ModalContentProps) => {
         packagePrice = '',
         billingType,
         ctaBehaviour,
+        ctaFormId,
         reportUuid,
         packageId,
         clientName,
@@ -143,6 +144,7 @@ const PackageEnquiry = ({ data }: ModalContentProps) => {
                 {error && <p className="text-red-400 text-sm">{error}</p>}
 
                 <button
+                    id={ctaFormId || undefined}
                     type="submit"
                     disabled={status === 'loading'}
                     className="w-full bg-brand-primary text-brand-secondary font-bold py-3 rounded-lg text-sm hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
