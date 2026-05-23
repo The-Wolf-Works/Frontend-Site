@@ -45,7 +45,7 @@ const SiteReportPage = async ({ params }: Props) => {
     return (
         <>
         <ReportProgress />
-        <div className="bg-brand-secondary">
+        <div className="bg-brand-secondary overflow-x-hidden">
             <HeroSection
                 clientName={report.client_name}
                 clientDomain={report.client_domain}

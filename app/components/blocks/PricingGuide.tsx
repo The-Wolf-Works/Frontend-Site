@@ -1,6 +1,7 @@
 import { CheckIcon } from '@heroicons/react/24/outline'
 import type { PricingGuideBlock } from '@/lib/types'
 import ModalButton from "@/app/components/modal/ModalButton"
+import MobileSlider from "@/app/components/common/MobileSlider"
 
 interface PricingGuideProps {
     block: PricingGuideBlock
@@ -24,7 +25,7 @@ export const PricingGuide = ({ block }: PricingGuideProps) => {
             </div>
 
             {/* Plan cards */}
-            <div className="grid grid-cols-1 nav:grid-cols-3 gap-5">
+            <MobileSlider desktopClassName="grid-cols-3 gap-5" labels="Slide to see more guides">
                 {block.plans.map(({ plan }, index) => (
                     <div
                         key={index}
@@ -115,7 +116,7 @@ export const PricingGuide = ({ block }: PricingGuideProps) => {
 
                     </div>
                 ))}
-            </div>
+            </MobileSlider>
 
         </section>
     )

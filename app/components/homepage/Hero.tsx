@@ -8,7 +8,7 @@ interface HeroProps {
 
 export const Hero = ({ hero }: HeroProps) => {
     return (
-        <section className="relative h-[calc(100vh-var(--nav-height))] flex items-center overflow-hidden">
+        <section className="relative h-[calc(100vh-var(--nav-height))] min-h-[400px] flex items-center overflow-hidden">
             {/* Gradient overlay — brand-secondary left, transparent right */}
             <div
                 className="absolute inset-0 z-10"
@@ -19,19 +19,19 @@ export const Hero = ({ hero }: HeroProps) => {
 
             {/* Bottom fade — blends into HowItWorks section */}
             <div
-                className="absolute inset-x-0 bottom-0 h-48 z-20 pointer-events-none"
+                className="absolute inset-x-0 bottom-0 h-24 md:h-48 z-10 pointer-events-none"
                 style={{ background: "linear-gradient(to bottom, transparent, #263038)" }}
             />
             <HeroBackground />
 
             {/* Content */}
-            <div className="relative z-10 w-full px-12 md:px-20">
+            <div className="relative z-20 w-full px-8 md:px-20">
                 {/* Eyebrow */}
                 <p className="text-sm font-medium tracking-widest uppercase text-brand-primary mb-4">
                     {hero.heroHeading}
                 </p>
                 {/* Main statement */}
-                <h1 className="text-5xl min-[768px]:text-6xl min-[1024px]:text-7xl min-[1400px]:text-8xl font-extrabold text-white leading-tight mb-6">
+                <h1 className="text-4xl min-[768px]:text-6xl min-[1024px]:text-7xl min-[1400px]:text-8xl font-extrabold text-white leading-tight mb-6">
                     {hero.heroStatement.firstLine}
                     <br />
                     <span className="text-brand-primary">{hero.heroStatement.secondLine}</span>
