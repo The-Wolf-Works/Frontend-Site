@@ -124,7 +124,6 @@ export const POST = async (req: NextRequest) => {
                 Subject: subject,
                 HtmlBody: html,
                 MessageStream: stream,
-                ...(pdfAttachment && emailType !== 'admin' ? { Attachments: [pdfAttachment] } : {}),
             })
         })
     )
