@@ -9,6 +9,7 @@ const sections = [
     { id: 'pillars',              label: 'Pillars' },
     { id: 'red-flags',            label: 'Red Flags' },
     { id: 'quick-win',            label: 'Quick Win' },
+    { id: 'ai-edge',              label: 'AI Edge' },
     { id: 'next-steps',           label: 'Next Steps' },
     { id: 'testimonials',         label: 'Testimonials' },
 ]

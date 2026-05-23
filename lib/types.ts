@@ -251,12 +251,24 @@ export interface WolfScoreData {
     strategic_pivot: string
     recommendation: string
 }
+export interface AiEdgeRoiRow {
+    metric: string
+    manual: string
+    ai_assisted: string
+    net_savings: string
+}
+export interface AiEdge {
+    sector_identified: string
+    analysis_text: string
+    roi_table_data: AiEdgeRoiRow[]
+}
 export interface ReportStructuredData {
     executive_summary: string
     quick_win: { title: string; description: string }
     accessibility_view: string
     client_view: string
     revenue_view: string
+    ai_edge?: AiEdge
     conversion_readiness: ConversionReadiness
     wolf_score: WolfScoreData
     report_html: string
