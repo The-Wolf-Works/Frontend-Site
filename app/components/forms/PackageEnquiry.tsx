@@ -69,6 +69,7 @@ const PackageEnquiry = ({ data }: ModalContentProps) => {
                 throw new Error(d.error ?? 'Something went wrong')
             }
             setStatus('success')
+            window.dispatchEvent(new CustomEvent('package-actioned', { detail: { packageId: Number(packageId) } }))
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An error occurred')
             setStatus('error')

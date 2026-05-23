@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { icons } from '@/app/components/icons/Icons'
 import useScrollInView from '@/app/hooks/useScrollInView'
 import { DotGrid } from '@/app/components/report/site-report/SectionLabel'
@@ -33,6 +33,15 @@ const NextSteps = ({ packages, reportUuid, clientName, clientEmail, clientDomain
     const [loadingId, setLoadingId] = useState<number | null>(null)
     const [clickedIds, setClickedIds] = useState<number[]>(actionedPackages)
 
+    useEffect(() => {
+        const handler = (e: Event) => {
+            const { packageId } = (e as CustomEvent<{ packageId: number }>).detail
+            setClickedIds(prev => prev.includes(packageId) ? prev : [...prev, packageId])
+        }
+        window.addEventListener('package-actioned', handler)
+        return () => window.removeEventListener('package-actioned', handler)
+    }, [])
+
     const sorted = [...packages].sort((a, b) => a.packageDetails.order - b.packageDetails.order)
 
     const cols =
@@ -62,7 +71,6 @@ const NextSteps = ({ packages, reportUuid, clientName, clientEmail, clientDomain
         }
 
         if (normalisedBehaviour === 'enquire') {
-            setClickedIds(prev => [...prev, databaseId])
             openModal('package-enquiry', { ...modalData, packageId: String(databaseId) })
             return
         }
