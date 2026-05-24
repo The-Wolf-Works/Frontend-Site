@@ -119,6 +119,7 @@ export const POST = async (req: NextRequest) => {
             const body = replacePlaceholders(tpl.emailTemplates.bodyContent, vars)
             const subject = replacePlaceholders(tpl.emailTemplates.subject, vars)
             const html = await render(<WPEmailTemplate bodyContent={body} previewText={subject} />)
+            console.log('[package-enquiry] sending email', { emailType, from, to, stream })
             return postmark.sendEmail({
                 From: from,
                 To: to,
