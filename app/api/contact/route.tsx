@@ -39,6 +39,7 @@ const verifyRecaptcha = async (token: string): Promise<boolean> => {
 
 // Send email using Postmark
 export const POST = async (req: NextRequest) => {
+  try {
     const postmark = new ServerClient(process.env.POSTMARK_API_KEY!)
     const { formType, requiredFields, recaptchaToken, name, email, ...rest } = await req.json()
 
@@ -52,10 +53,13 @@ export const POST = async (req: NextRequest) => {
         return NextResponse.json({ error: 'Missing form type.' }, { status: 400 })
     }
 
-    // Verify reCAPTCHA token
-    const isHuman = await verifyRecaptcha(recaptchaToken)
-    if (!isHuman) {
-        return NextResponse.json({ error: 'Failed spam check.' }, { status: 400 })
+    // Skip reCAPTCHA for internal form types (authenticated, non-public)
+    const internalFormTypes = ['report']
+    if (!internalFormTypes.includes(formType)) {
+        const isHuman = await verifyRecaptcha(recaptchaToken)
+        if (!isHuman) {
+            return NextResponse.json({ error: 'Failed spam check.' }, { status: 400 })
+        }
     }
 
     if (requiredFields?.length) {
@@ -124,4 +128,8 @@ export const POST = async (req: NextRequest) => {
 
     // Return success response
     return NextResponse.json({ success: true })
+  } catch (err) {
+    console.error('[contact]', err)
+    return NextResponse.json({ error: 'An unexpected error occurred.' }, { status: 500 })
+  }
 }

@@ -93,6 +93,10 @@ const StepFinalise = ({ formData, reportData, onBack, onReset }: Props) => {
                     })
                 })
 
+                if (!emailRes.ok) {
+                    const d = await emailRes.json().catch(() => ({}))
+                    console.error('[StepFinalise] email error', d)
+                }
                 setActions(prev => ({ ...prev, email: emailRes.ok ? 'success' : 'error' }))
             }
 
