@@ -24,6 +24,7 @@ interface EmailTemplateResponse {
 }
 
 export const POST = async (req: NextRequest) => {
+  try {
     const postmark = new ServerClient(process.env.POSTMARK_API_KEY!)
     const {
         packageTitle,
@@ -137,4 +138,8 @@ export const POST = async (req: NextRequest) => {
     }
 
     return NextResponse.json({ success: true })
+  } catch (err) {
+    console.error('[package-enquiry]', err)
+    return NextResponse.json({ error: 'An unexpected error occurred.' }, { status: 500 })
+  }
 }

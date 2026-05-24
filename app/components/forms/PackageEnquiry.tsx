@@ -65,8 +65,8 @@ const PackageEnquiry = ({ data }: ModalContentProps) => {
                 }),
             })
             if (!res.ok) {
-                const d = await res.json()
-                throw new Error(d.error ?? 'Something went wrong')
+                const d = await res.json().catch(() => ({}))
+                throw new Error((d as { error?: string }).error ?? 'Something went wrong')
             }
             setStatus('success')
             window.dispatchEvent(new CustomEvent('package-actioned', { detail: { packageId: Number(packageId) } }))
