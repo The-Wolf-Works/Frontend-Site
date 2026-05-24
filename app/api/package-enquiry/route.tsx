@@ -25,6 +25,7 @@ interface EmailTemplateResponse {
 
 export const POST = async (req: NextRequest) => {
   try {
+    console.log('[package-enquiry] route hit')
     const postmark = new ServerClient(process.env.POSTMARK_API_KEY!)
     const {
         packageTitle,
