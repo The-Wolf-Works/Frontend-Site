@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
         remotePatterns: [
             {
                 protocol: 'https',
-                hostname: 'mtcreative.dev',
+                hostname: 'cms.thewolf.works',
             },
         ],
     },
