@@ -7,6 +7,7 @@ import SmoothScroll from '@/app/components/common/SmoothScroll'
 import ModalProvider from "./components/modal/ModalProvider"
 import { Suspense } from "react"
 import RecaptchaProvider from "./components/providers/RecaptchaProvider"
+import { GoogleTagManagerScript, GoogleTagManagerNoScript } from "./components/providers/GoogleTagManager"
 
 const inter = Inter({
     subsets: ["latin"],
@@ -44,6 +45,8 @@ export default function RootLayout({
       <body
         className={`${inter.className} antialiased min-h-screen flex flex-col bg-brand-secondary`}
       >
+        <GoogleTagManagerNoScript />
+        <GoogleTagManagerScript />
         <Suspense>
             <RecaptchaProvider>
                 <ModalProvider>
