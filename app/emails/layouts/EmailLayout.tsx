@@ -17,7 +17,7 @@ interface EmailLayoutProps {
 }
 
 const siteUrl = process.env.WP_SITE_URL ?? 'https://thewolf.works'
-const logoUrl = process.env.LOGO_URL ?? 'https://mtcreative.dev/testing-site/wp-content/uploads/2026/03/logo.png'
+const logoUrl = process.env.LOGO_URL ?? 'https://cms.thewolf.works/wp-content/uploads/2026/03/logo.png'
 
 export default function EmailLayout({ children, previewText }: EmailLayoutProps) {
     return (
