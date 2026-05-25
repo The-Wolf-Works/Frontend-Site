@@ -12,12 +12,12 @@ export async function generateStaticParams() {
 }
 
 interface PageProps {
-  params: {
-    slug: string;
-  };
+    params: Promise<{
+        slug: string
+    }>;
 }
 
-export const Page = async ({ params }: PageProps) => {
+const Page = async ({ params }: PageProps) => {
 
     const { slug } = await params
     const data = await client.request<GetPageBySlugResponse>(
@@ -25,7 +25,7 @@ export const Page = async ({ params }: PageProps) => {
     { uri: `/${slug}/` }
   )
 
-  const page = data.pageBy;
+  const page = data.nodeByUri;
 
   if (!page) {
     notFound();
