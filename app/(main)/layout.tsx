@@ -2,6 +2,7 @@ import Navigation from "../components/navigation/Navigation"
 import Footer from "../components/footer/Footer"
 import SmoothScroll from "../components/common/SmoothScroll"
 
+export const revalidate = 60
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
     return (
