@@ -2,6 +2,8 @@ import Navigation from "../components/navigation/Navigation"
 import Footer from "../components/footer/Footer"
 import SmoothScroll from "../components/common/SmoothScroll"
 
+// Revalidate this page every 60 seconds
+export const revalidate = 60
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
     return (
