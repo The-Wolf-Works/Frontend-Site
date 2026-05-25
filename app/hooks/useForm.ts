@@ -31,7 +31,7 @@ export const useForm = ({ initialValues, formType, extraData, requiredFields }: 
         setError(null)
         try {
             if (!executeRecaptcha) throw new Error('reCAPTCHA not ready')
-            const recaptchaToken = await executeRecaptcha(formType)
+            const recaptchaToken = await executeRecaptcha(formType.replace(/-/g, '_'))
 
             const res = await fetch('/api/contact', {
                 method: 'POST',
