@@ -32,7 +32,7 @@ const Page = async ({ params }: PageProps) => {
   }
 
   return (
-    <article className="max-w-3xl mx-auto p-8">
+    <article className="min-h-screen bg-brand-secondary max-w-3xl mx-auto p-8">
       {page.featuredImage && (
         <Image
           src={page.featuredImage.node.sourceUrl}
@@ -42,9 +42,9 @@ const Page = async ({ params }: PageProps) => {
           height={600}
         />
       )}
-      <h1 className="text-4xl font-bold mb-4">{page.title}</h1>
+      <h1 className="text-4xl font-bold mb-4 text-white">{page.title}</h1>
       <div
-        className="prose prose-lg max-w-none"
+        className="prose prose-lg prose-invert max-w-none"
         dangerouslySetInnerHTML={{ __html: page.content }}
       />
     </article>
