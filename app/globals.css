@@ -19,6 +19,10 @@
 
 /* Frosted Blue = #8EDCE6 */
 
+.prose, .prose * {
+    font-family: inherit;
+}
+
 .grecaptcha-badge {
     z-index: 9999 !important;
 }

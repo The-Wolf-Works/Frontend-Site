@@ -2,8 +2,14 @@ import LinkList from '../common/LinkList'
 import Image from 'next/image'
 import Link from 'next/link'
 import { FaInstagram, FaFacebook, FaLinkedin } from 'react-icons/fa'
+import { client } from '@/lib/client'
+import { GET_FOOTER_MENU } from '@/lib/queries'
+import type { GetMenuResponse } from '@/lib/types'
 
-export const Footer = () => {
+export const Footer = async () => {
+    const data = await client.request<GetMenuResponse>(GET_FOOTER_MENU)
+    const menuItems = data.menuItems.nodes
+
     return (
         <div className="w-full bg-brand-secondary px-8 py-6">
             <div className="flex flex-col gap-4 nav:flex-row nav:items-center nav:justify-between">
@@ -19,11 +25,9 @@ export const Footer = () => {
                     </Link>
                     <p className="text-base font-medium text-gray-300">Your AI Report Specialist</p>
                 </div>
-                <LinkList className="text-base font-medium text-gray-300 hover:text-white transition-colors duration-200" links={[
-                    { label: "Privacy Policy", href: "/privacy-policy" },
-                    { label: "Terms & Conditions", href: "/terms-conditions" },
-                    { label: "Cookie Policy", href: "/cookie-policy"}
-                ]} />
+                <LinkList className="text-base font-medium text-gray-300 hover:text-white transition-colors duration-200" links={
+                    menuItems.map(item => ({ label: item.label, href: item.path }))
+                } />
                 <div className="flex items-center gap-6">
                     <a href="https://www.instagram.com/thewolf.works/" target="_blank" rel="noopener noreferrer"
                         className="text-gray-300 hover:text-white transition-colors duration-200">
