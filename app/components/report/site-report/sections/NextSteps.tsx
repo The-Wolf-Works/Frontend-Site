@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { icons } from '@/app/components/icons/Icons'
 import useScrollInView from '@/app/hooks/useScrollInView'
-import { DotGrid } from '@/app/components/report/site-report/SectionLabel'
+import DotGrid from '@/app/components/common/DotGrid'
 import { useModal } from '@/app/hooks/useModal'
 import { ServicePackage } from '@/lib/types'
 

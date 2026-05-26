@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import useScrollInView from '@/app/hooks/useScrollInView'
-import SectionLabel, { DotGrid } from '../SectionLabel'
+import SectionLabel from '../SectionLabel'
+import DotGrid from '@/app/components/common/DotGrid'
 import { ConversionReadiness } from '@/lib/types'
 
 interface Props {
