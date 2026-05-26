@@ -1,5 +1,5 @@
 import RadarGraphic from '@/app/components/graphics/RadarGraphic'
-import { DotGrid } from '@/app/components/report/site-report/SectionLabel'
+import DotGrid from '@/app/components/common/DotGrid'
 
 interface Props {
     clientName: string

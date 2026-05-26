@@ -1,7 +1,8 @@
 'use client'
 
 import { icons } from '@/app/components/icons/Icons'
-import SectionLabel, { DotGrid } from '../SectionLabel'
+import SectionLabel from '../SectionLabel'
+import DotGrid from '@/app/components/common/DotGrid'
 import useScrollInView from '@/app/hooks/useScrollInView'
 
 interface Props {
