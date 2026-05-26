@@ -25,19 +25,4 @@ const SectionLabel = ({ label, color = 'brand-primary' }: { label: string; color
     )
 }
 
-/**
- * Shared dot-grid background decoration used across all report sections.
- * Absolutely positioned, covers the full parent (which must be `relative`).
- * Pointer events are disabled so it never intercepts interaction.
- */
-export const DotGrid = () => (
-    <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-            backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)',
-            backgroundSize: '32px 32px',
-        }}
-    />
-)
-
 export default SectionLabel

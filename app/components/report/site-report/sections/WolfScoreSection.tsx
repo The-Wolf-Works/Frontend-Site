@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import SectionLabel, { DotGrid } from '../SectionLabel'
+import SectionLabel from '../SectionLabel'
+import DotGrid from '@/app/components/common/DotGrid'
 import ScoreRing, { getScoreColor } from '../ScoreRing'
 import useScrollInView from '@/app/hooks/useScrollInView'
 
