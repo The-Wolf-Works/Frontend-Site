@@ -56,6 +56,21 @@ export const GET_PRIMARY_MENU = gql`
     }
 `
 
+// Footer menu
+export const GET_FOOTER_MENU = gql`
+    query GetFooterMenu {
+        menuItems(where: {location: FOOTER}) {
+            nodes {
+                cssClasses
+                id
+                label
+                path
+                url
+            }
+        }
+    }
+`
+
 // Homepage block
 export const GET_HOMEPAGE = gql`
     query GetHomepage {
