@@ -57,14 +57,14 @@ const PublicEntryForm = () => {
             const generateData = await generateRes.json()
             if (!generateRes.ok) throw new Error(generateData.error ?? 'Failed to generate report')
 
-            const reportData: ReportStructuredData = generateData
+            const { free_sections: freeSectionsConfig, ...reportData } = generateData as ReportStructuredData & { free_sections: string[] | null }
 
             setStatus('saving')
 
             const saveRes = await fetch('/api/report/save-public', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ domain, reportData }),
+                body: JSON.stringify({ domain, reportData, freeSectionsConfig }),
             })
 
             const saveData = await saveRes.json()

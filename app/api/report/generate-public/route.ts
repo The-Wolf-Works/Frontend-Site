@@ -38,7 +38,9 @@ export const POST = async (req: NextRequest) => {
         })
 
         const report = await generateReport(prompt)
-        return NextResponse.json(report)
+        const freeSections = data.aIReportPrompt.aiReportPrompts?.freeSections ?? null
+
+        return NextResponse.json({ ...report, free_sections: freeSections })
 
     } catch (error) {
         return NextResponse.json(
