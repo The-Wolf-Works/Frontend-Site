@@ -272,8 +272,9 @@ export const GET_AI_REPORT_PROMPT = gql`
     query GetAiReportPrompt($id: ID!) {
         aIReportPrompt(id: $id, idType: DATABASE_ID) {
             title
+            content
             aiReportPrompts {
-                postContent
+                freeSections
             }
         }
     }
