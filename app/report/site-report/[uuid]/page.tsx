@@ -14,6 +14,7 @@ import NextSteps from '@/app/components/report/site-report/sections/NextSteps'
 import TestimonialsSection from '@/app/components/report/site-report/sections/TestimonialsSection'
 import ReportProgress from '@/app/components/report/site-report/ReportProgress'
 import LockedSection from '@/app/components/report/site-report/LockedSection'
+import UnlockOverlay from '@/app/components/report/site-report/UnlockOverlay'
 
 interface Props {
     params: Promise<{ uuid: string }>
@@ -154,6 +155,8 @@ const SiteReportPage = async ({ params }: Props) => {
 
             <TestimonialsSection testimonials={testimonials} />
         </div>
+
+        {isPublicFree && <UnlockOverlay uuid={uuid} />}
         </>
     )
 }
