@@ -212,8 +212,9 @@ export interface GetServicePackagesResponse {
 export interface AiReportPrompt {
     databaseId: number
     title: string
-    aiReportPrompts: {
-        postContent: string
+    content?: string
+    aiReportPrompts?: {
+        freeSections: string[] | null
     }
 }
 export interface GetAiReportPromptsResponse {

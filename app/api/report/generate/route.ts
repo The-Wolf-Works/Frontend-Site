@@ -23,11 +23,11 @@ export const POST = async (req: NextRequest) => {
             id: promptId
         })
 
-        if (!data.aIReportPrompt?.aiReportPrompts?.postContent) {
+        if (!data.aIReportPrompt?.content) {
             return NextResponse.json({ error: 'Prompt not found' }, { status: 404 })
         }
 
-        const promptContent = data.aIReportPrompt?.aiReportPrompts?.postContent
+        const promptContent = data.aIReportPrompt.content
 
         const prompt = replacePlaceholders(promptContent, {
             client_name: clientName,
