@@ -5,6 +5,7 @@ import { ReportStructuredData } from '@/lib/types'
 interface SavePublicReportPayload {
     domain: string
     reportData: ReportStructuredData
+    freeSectionsConfig: string[] | null
 }
 
 /**
@@ -16,7 +17,7 @@ interface SavePublicReportPayload {
  */
 export const POST = async (req: NextRequest) => {
     try {
-        const { domain, reportData }: SavePublicReportPayload = await req.json()
+        const { domain, reportData, freeSectionsConfig }: SavePublicReportPayload = await req.json()
 
         if (!domain || !reportData) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -36,7 +37,7 @@ export const POST = async (req: NextRequest) => {
                 prompt_title: '',
                 generate_pdf: false,
                 report_type: 'public_free',
-                free_sections_config: null,
+                free_sections_config: freeSectionsConfig ? JSON.stringify(freeSectionsConfig) : null,
             })
         })
 
