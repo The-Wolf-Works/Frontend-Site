@@ -1,0 +1,56 @@
+import { NextRequest, NextResponse } from "next/server"
+import { wpFetch } from '@/lib/wp'
+import { ReportStructuredData } from '@/lib/types'
+
+interface SavePublicReportPayload {
+    domain: string
+    reportData: ReportStructuredData
+}
+
+/**
+ * Saves a publicly-generated report to WordPress.
+ * Stores the domain as the client identifier; name and email are
+ * populated later when the visitor unlocks the full report.
+ * @param req - { domain, reportData }
+ * @returns { uuid }
+ */
+export const POST = async (req: NextRequest) => {
+    try {
+        const { domain, reportData }: SavePublicReportPayload = await req.json()
+
+        if (!domain || !reportData) {
+            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+        }
+
+        const uuid = crypto.randomUUID()
+
+        const res = await wpFetch('/reports/save', {
+            method: 'POST',
+            body: JSON.stringify({
+                report_data: reportData,
+                client_name: domain,
+                client_email: '',
+                client_domain: domain,
+                uuid,
+                prompt_id: 0,
+                prompt_title: '',
+                generate_pdf: false,
+                report_type: 'public_free',
+                free_sections_config: null,
+            })
+        })
+
+        if (!res.ok) {
+            const errorData = await res.json().catch(() => null)
+            return NextResponse.json({ error: errorData?.message ?? 'Failed to save report' }, { status: 500 })
+        }
+
+        return NextResponse.json({ uuid })
+
+    } catch (error) {
+        return NextResponse.json(
+            { error: error instanceof Error ? error.message : 'Failed to save report' },
+            { status: 500 }
+        )
+    }
+}
