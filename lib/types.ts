@@ -283,5 +283,7 @@ export interface SiteReportResponse extends ReportStructuredData {
     report_generated_at?: string
     report_prompt_title?: string
     actioned_packages: number[]
+    report_type: 'internal' | 'public_free' | 'public_unlocked'
+    free_sections_config: string[] | null
 }
 
