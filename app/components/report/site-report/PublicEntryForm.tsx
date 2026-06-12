@@ -3,55 +3,47 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ReportStructuredData } from '@/lib/types'
+import { normaliseDomain } from '@/app/utils/domain'
 
-type Status = 'idle' | 'generating' | 'saving' | 'error'
-type DomainCheckStatus = 'idle' | 'checking' | 'exists' | 'clear'
+type Status = 'idle' | 'checking' | 'generating' | 'saving' | 'redirecting' | 'error'
 
-const domainStatusConfig: Record<DomainCheckStatus, { border: string; message: string | null; messageClass: string }> = {
-    idle:     { border: 'border-white/20', message: null, messageClass: '' },
-    checking: { border: 'border-white/20', message: 'Checking domain...', messageClass: 'text-white/50' },
-    exists:   { border: 'border-amber-500', message: 'A report already exists for this domain — redirecting...', messageClass: 'text-amber-400' },
-    clear:    { border: 'border-green-500', message: 'Domain is available', messageClass: 'text-green-500' },
+const statusMessage: Partial<Record<Status, string>> = {
+    checking:    'Checking domain...',
+    generating:  'Analysing your website. This takes around 30 seconds...',
+    saving:      'Saving your report...',
+    redirecting: 'Report found. Redirecting...',
 }
 
 const PublicEntryForm = () => {
     const router = useRouter()
     const [domain, setDomain] = useState('')
-    const [domainCheck, setDomainCheck] = useState<DomainCheckStatus>('idle')
     const [status, setStatus] = useState<Status>('idle')
     const [error, setError] = useState<string | null>(null)
 
-    const handleDomainBlur = async () => {
-        if (!domain) return
-
-        setDomainCheck('checking')
-
-        try {
-            const res = await fetch(`/api/report/check-domain?domain=${encodeURIComponent(domain)}`)
-            const data = await res.json()
-
-            if (data.exists && data.uuid) {
-                setDomainCheck('exists')
-                setTimeout(() => router.push(`/report/site-report/${data.uuid}`), 1500)
-            } else {
-                setDomainCheck(data.exists ? 'idle' : 'clear')
-            }
-        } catch {
-            setDomainCheck('idle')
-        }
-    }
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setError(null)
 
-        try {
-            setStatus('generating')
+        const normalisedDomain = normaliseDomain(domain)
 
+        try {
+            // Step 1: Check if a report already exists for this domain
+            setStatus('checking')
+            const checkRes = await fetch(`/api/report/check-domain?domain=${encodeURIComponent(normalisedDomain)}`)
+            const checkData = await checkRes.json()
+
+            if (checkData.exists && checkData.uuid) {
+                setStatus('redirecting')
+                router.push(`/report/site-report/${checkData.uuid}`)
+                return
+            }
+
+            // Step 2: Generate the report
+            setStatus('generating')
             const generateRes = await fetch('/api/report/generate-public', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ domain }),
+                body: JSON.stringify({ domain: normalisedDomain }),
             })
 
             const generateData = await generateRes.json()
@@ -59,17 +51,19 @@ const PublicEntryForm = () => {
 
             const { free_sections: freeSectionsConfig, ...reportData } = generateData as ReportStructuredData & { free_sections: string[] | null }
 
+            // Step 3: Save the report
             setStatus('saving')
-
             const saveRes = await fetch('/api/report/save-public', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ domain, reportData, freeSectionsConfig }),
+                body: JSON.stringify({ domain: normalisedDomain, reportData, freeSectionsConfig }),
             })
 
             const saveData = await saveRes.json()
             if (!saveRes.ok) throw new Error(saveData.error ?? 'Failed to save report')
 
+            // Step 4: Redirect to the report
+            setStatus('redirecting')
             router.push(`/report/site-report/${saveData.uuid}`)
 
         } catch (err) {
@@ -78,36 +72,25 @@ const PublicEntryForm = () => {
         }
     }
 
-    const isLoading = status === 'generating' || status === 'saving'
-    const domainConfig = domainStatusConfig[domainCheck]
+    const isLoading = status !== 'idle' && status !== 'error'
+    const message = statusMessage[status]
 
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <input
+                type="text"
+                placeholder="yourwebsite.com"
+                value={domain}
+                onChange={e => setDomain(e.target.value)}
+                required
+                disabled={isLoading}
+                className="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-brand-primary disabled:opacity-50"
+            />
 
-            <div>
-                <input
-                    type="text"
-                    placeholder="yourwebsite.com"
-                    value={domain}
-                    onChange={e => { setDomain(e.target.value); setDomainCheck('idle') }}
-                    onBlur={handleDomainBlur}
-                    required
-                    disabled={isLoading}
-                    className={`w-full bg-white/5 border ${domainConfig.border} rounded-lg px-4 py-3 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-brand-primary disabled:opacity-50`}
-                />
-                {domainConfig.message && (
-                    <p className={`text-xs mt-1.5 ml-1 ${domainConfig.messageClass}`}>{domainConfig.message}</p>
-                )}
-            </div>
-
-            {isLoading && (
-                <div className="flex items-center gap-3 py-2">
+            {message && (
+                <div className="flex items-center gap-3">
                     <div className="w-4 h-4 rounded-full border-2 border-brand-primary border-t-transparent animate-spin flex-shrink-0" />
-                    <p className="text-white/50 text-sm">
-                        {status === 'generating'
-                            ? 'Analysing your website — this takes around 30 seconds...'
-                            : 'Saving your report...'}
-                    </p>
+                    <p className="text-white/50 text-sm">{message}</p>
                 </div>
             )}
 
@@ -117,10 +100,10 @@ const PublicEntryForm = () => {
 
             <button
                 type="submit"
-                disabled={isLoading || domainCheck === 'exists'}
+                disabled={isLoading}
                 className="w-full bg-brand-primary text-brand-secondary font-bold py-3 rounded-lg text-sm hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
             >
-                {isLoading ? 'Generating...' : 'Get My Free Report →'}
+                {isLoading ? 'Please wait...' : 'Get My Free Report →'}
             </button>
 
             <p className="text-white/30 text-xs text-center">

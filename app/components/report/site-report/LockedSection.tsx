@@ -54,6 +54,7 @@ const SECTION_META: Record<string, SectionMeta> = {
 
 interface Props {
     sectionKey: string
+    id?: string
 }
 
 /**
@@ -61,7 +62,7 @@ interface Props {
  * No section data is passed to this component — gating is enforced server-side.
  * Clicking the CTA dispatches a custom event that the UnlockOverlay listens for.
  */
-const LockedSection = ({ sectionKey }: Props) => {
+const LockedSection = ({ sectionKey, id }: Props) => {
     const meta = SECTION_META[sectionKey] ?? {
         label: 'Locked Section',
         title: 'This section is locked',
@@ -73,7 +74,7 @@ const LockedSection = ({ sectionKey }: Props) => {
     }
 
     return (
-        <section className="min-h-screen flex flex-col justify-center border-t border-white/10 px-10 md:px-16 py-20 relative overflow-hidden">
+        <section id={id} className="min-h-screen flex flex-col justify-center border-t border-white/10 px-10 md:px-16 py-20 relative overflow-hidden">
 
             <DotGrid />
 

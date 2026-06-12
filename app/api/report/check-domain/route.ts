@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { wpFetch } from "@/lib/wp";
+import { normaliseDomain } from "@/app/utils/domain";
 
 /**
  * Check if a domain is available for reporting
@@ -7,11 +8,13 @@ import { wpFetch } from "@/lib/wp";
  * @returns The response object
  */
 export const GET = async (req: NextRequest) => {
-    const domain = req.nextUrl.searchParams.get('domain')
+    const raw = req.nextUrl.searchParams.get('domain')
 
-    if (!domain) {
+    if (!raw) {
         return NextResponse.json({ error: 'Missing domain' }, { status: 400 })
     }
+
+    const domain = normaliseDomain(raw)
 
     const res = await wpFetch(
         `/reports/check-domain?domain=${encodeURIComponent(domain)}`

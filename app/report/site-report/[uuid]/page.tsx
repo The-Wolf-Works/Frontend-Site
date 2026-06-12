@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import { wpFetch } from '@/lib/wp'
 import { client } from '@/lib/client'
 import { GET_TESTIMONIALS, GET_SERVICE_PACKAGES } from '@/lib/queries'
-import { SiteReportResponse, GetTestimonialsResponse, GetServicePackagesResponse } from '@/lib/types'
+import { SiteReportResponse, GetTestimonialsResponse, GetServicePackagesResponse, ProgressSection } from '@/lib/types'
 import HeroSection from '@/app/components/report/site-report/sections/HeroSection'
 import WolfScoreSection from '@/app/components/report/site-report/sections/WolfScoreSection'
 import ConversionSection from '@/app/components/report/site-report/sections/ConversionSection'
@@ -53,9 +53,36 @@ const SiteReportPage = async ({ params }: Props) => {
     const freeSections = report.free_sections_config ?? []
     const isFree = (key: string) => !isPublicFree || freeSections.includes(key)
 
+    // Keys present in SiteReportResponse that are NOT renderable sections.
+    // executive_summary renders inside wolf_score; report_html is raw markup.
+    // WP meta fields are excluded by being absent from ReportStructuredData.
+    const NON_SECTION_KEYS = new Set(['executive_summary', 'report_html',
+        'client_name', 'client_email', 'client_domain', 'report_generated_at',
+        'report_prompt_title', 'actioned_packages', 'report_type', 'free_sections_config'])
+
+    // Derive nav label from key: split on underscore, capitalise each word.
+    // Handles common acronyms (AI, SEO, URL) correctly.
+    const ACRONYMS = new Set(['ai', 'seo', 'url'])
+    const toLabel = (key: string) =>
+        key.split('_').map(w => ACRONYMS.has(w) ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+
+    // Build progress nav from actual report keys — any key not in the exclusion list
+    // and present in the data is treated as a section. next_steps is always appended
+    // (UI-only, not an AI data key).
+    const progressSections: ProgressSection[] = [
+        ...Object.keys(report)
+            .filter(key => !NON_SECTION_KEYS.has(key) && report[key as keyof SiteReportResponse] != null)
+            .map(key => ({
+                id:     key.replace(/_/g, '-'),
+                label:  toLabel(key),
+                locked: !isFree(key),
+            })),
+        { id: 'next-steps', label: 'Next Steps', locked: !isFree('next_steps') },
+    ]
+
     return (
         <>
-        <ReportProgress />
+        <ReportProgress sections={progressSections} />
         <div className="bg-brand-secondary overflow-x-hidden">
 
             {/* HeroSection — always visible */}
@@ -74,7 +101,7 @@ const SiteReportPage = async ({ params }: Props) => {
                     executiveSummary={isFree('executive_summary') ? report.executive_summary : null}
                 />
             ) : (
-                <LockedSection sectionKey="wolf_score" />
+                <LockedSection id="wolf-score" sectionKey="wolf_score" />
             )}
 
             {/* Executive Summary as standalone locked section —
@@ -85,35 +112,28 @@ const SiteReportPage = async ({ params }: Props) => {
 
             {/* Conversion Readiness */}
             {report.conversion_readiness && (
-                isFree('conversion') ? (
+                isFree('conversion_readiness') ? (
                     <ConversionSection data={report.conversion_readiness} />
                 ) : (
-                    <LockedSection sectionKey="conversion" />
+                    <LockedSection id="conversion-readiness" sectionKey="conversion" />
                 )
             )}
 
             {/* Three Pillars */}
-            {report.accessibility_view && report.client_view && report.revenue_view && (
+            {report.pillars && (
                 isFree('pillars') ? (
-                    <PillarsSection
-                        accessibilityView={report.accessibility_view}
-                        clientView={report.client_view}
-                        revenueView={report.revenue_view}
-                    />
+                    <PillarsSection data={report.pillars} />
                 ) : (
-                    <LockedSection sectionKey="pillars" />
+                    <LockedSection id="pillars" sectionKey="pillars" />
                 )
             )}
 
             {/* Red Flags */}
-            {(report.wolf_score?.red_flags?.length || report.wolf_score?.leaky_bucket) && (
+            {report.red_flags && (
                 isFree('red_flags') ? (
-                    <RedFlagsSection
-                        redFlags={report.wolf_score.red_flags ?? []}
-                        leakyBucket={report.wolf_score.leaky_bucket ?? ''}
-                    />
+                    <RedFlagsSection data={report.red_flags} />
                 ) : (
-                    <LockedSection sectionKey="red_flags" />
+                    <LockedSection id="red-flags" sectionKey="red_flags" />
                 )
             )}
 
@@ -126,7 +146,7 @@ const SiteReportPage = async ({ params }: Props) => {
                         strategicPivot={report.wolf_score.strategic_pivot}
                     />
                 ) : (
-                    <LockedSection sectionKey="quick_win" />
+                    <LockedSection id="quick-win" sectionKey="quick_win" />
                 )
             )}
 
@@ -135,7 +155,7 @@ const SiteReportPage = async ({ params }: Props) => {
                 isFree('ai_edge') ? (
                     <AiEdgeSection data={report.ai_edge} />
                 ) : (
-                    <LockedSection sectionKey="ai_edge" />
+                    <LockedSection id="ai-edge" sectionKey="ai_edge" />
                 )
             )}
 
@@ -150,7 +170,7 @@ const SiteReportPage = async ({ params }: Props) => {
                     actionedPackages={report.actioned_packages ?? []}
                 />
             ) : (
-                <LockedSection sectionKey="next_steps" />
+                <LockedSection id="next-steps" sectionKey="next_steps" />
             )}
 
             <TestimonialsSection testimonials={testimonials} />

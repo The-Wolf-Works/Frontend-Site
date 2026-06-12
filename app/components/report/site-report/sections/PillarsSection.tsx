@@ -5,11 +5,10 @@ import { icons } from '@/app/components/icons/Icons'
 import SectionLabel from '../SectionLabel'
 import DotGrid from '@/app/components/common/DotGrid'
 import useScrollInView from '@/app/hooks/useScrollInView'
+import { PillarsData } from '@/lib/types'
 
 interface Props {
-    accessibilityView: string
-    clientView: string
-    revenueView: string
+    data: PillarsData
 }
 
 const pillars = [
@@ -29,7 +28,7 @@ const pillars = [
  * @param clientView        - Analysis text for the Client View pillar (cyan).
  * @param revenueView       - Analysis text for the Revenue pillar (amber).
  */
-const PillarsSection = ({ accessibilityView, clientView, revenueView }: Props) => {
+const PillarsSection = ({ data }: Props) => {
     const { ref, inView, fadeUp } = useScrollInView()
     const [active, setActive] = useState(0)       // drives tab highlight + background
     const [displayed, setDisplayed] = useState(0) // drives content (lags during transition)
@@ -37,9 +36,9 @@ const PillarsSection = ({ accessibilityView, clientView, revenueView }: Props) =
     const [contentIn, setContentIn] = useState(true)
 
     const texts: Record<string, string> = {
-        accessibility: accessibilityView,
-        client: clientView,
-        revenue: revenueView,
+        accessibility: data.accessibility_view,
+        client: data.client_view,
+        revenue: data.revenue_view,
     }
 
     const goTo = (i: number) => {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { wpFetch } from '@/lib/wp'
 import { ReportStructuredData } from '@/lib/types'
+import { normaliseDomain, ensureProtocol } from '@/app/utils/domain'
 
 interface SavePublicReportPayload {
     domain: string
@@ -23,15 +24,17 @@ export const POST = async (req: NextRequest) => {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
         }
 
+        const clientName = normaliseDomain(domain)
+
         const uuid = crypto.randomUUID()
 
         const res = await wpFetch('/reports/save', {
             method: 'POST',
             body: JSON.stringify({
                 report_data: reportData,
-                client_name: domain,
+                client_name: clientName,
                 client_email: '',
-                client_domain: domain,
+                client_domain: ensureProtocol(domain),
                 uuid,
                 prompt_id: 0,
                 prompt_title: '',
