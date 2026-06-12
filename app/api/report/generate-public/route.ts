@@ -4,6 +4,7 @@ import { GET_AI_REPORT_PROMPT } from "@/lib/queries"
 import { GetAiReportPromptResponse } from "@/lib/types"
 import { replacePlaceholders } from '@/app/utils/stringReplacement'
 import { generateReport } from '../generate/reportGenerator'
+import { verifyRecaptcha } from '@/app/utils/recaptcha'
 
 // Default prompt used for public free reports.
 // Update this ID to change the prompt for all public reports.
@@ -17,10 +18,15 @@ const PUBLIC_PROMPT_ID = 180
  */
 export const POST = async (req: NextRequest) => {
     try {
-        const { domain } = await req.json()
+        const { domain, recaptchaToken } = await req.json()
 
         if (!domain) {
             return NextResponse.json({ error: 'Missing domain' }, { status: 400 })
+        }
+
+        const isHuman = await verifyRecaptcha(recaptchaToken ?? '')
+        if (!isHuman) {
+            return NextResponse.json({ error: 'Failed spam check.' }, { status: 400 })
         }
 
         const data = await client.request<GetAiReportPromptResponse>(GET_AI_REPORT_PROMPT, {

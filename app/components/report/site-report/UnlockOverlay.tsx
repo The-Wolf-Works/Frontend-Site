@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 
 interface Props {
     uuid: string
+    clientDomain: string
 }
 
 type Status = 'idle' | 'loading' | 'error'
@@ -14,8 +16,9 @@ type Status = 'idle' | 'loading' | 'error'
  * Collects name and email, calls /api/report/unlock, then refreshes
  * the page so the server re-renders with report_type: public_unlocked.
  */
-const UnlockOverlay = ({ uuid }: Props) => {
+const UnlockOverlay = ({ uuid, clientDomain }: Props) => {
     const router = useRouter()
+    const { executeRecaptcha } = useGoogleReCaptcha()
     const [open, setOpen] = useState(false)
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
@@ -36,10 +39,12 @@ const UnlockOverlay = ({ uuid }: Props) => {
         setStatus('loading')
 
         try {
+            if (!executeRecaptcha) throw new Error('reCAPTCHA not ready')
+            const recaptchaToken = await executeRecaptcha('unlock_report')
             const res = await fetch('/api/report/unlock', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ uuid, clientName: name, clientEmail: email }),
+                body: JSON.stringify({ uuid, clientName: name, clientEmail: email, clientDomain, recaptchaToken }),
             })
 
             const data = await res.json()

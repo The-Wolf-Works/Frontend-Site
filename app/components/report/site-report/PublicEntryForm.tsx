@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 import { ReportStructuredData } from '@/lib/types'
 import { normaliseDomain } from '@/app/utils/domain'
 
@@ -16,6 +17,7 @@ const statusMessage: Partial<Record<Status, string>> = {
 
 const PublicEntryForm = () => {
     const router = useRouter()
+    const { executeRecaptcha } = useGoogleReCaptcha()
     const [domain, setDomain] = useState('')
     const [status, setStatus] = useState<Status>('idle')
     const [error, setError] = useState<string | null>(null)
@@ -40,10 +42,12 @@ const PublicEntryForm = () => {
 
             // Step 2: Generate the report
             setStatus('generating')
+            if (!executeRecaptcha) throw new Error('reCAPTCHA not ready')
+            const recaptchaToken = await executeRecaptcha('public_report')
             const generateRes = await fetch('/api/report/generate-public', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ domain: normalisedDomain }),
+                body: JSON.stringify({ domain: normalisedDomain, recaptchaToken }),
             })
 
             const generateData = await generateRes.json()

@@ -176,7 +176,7 @@ const SiteReportPage = async ({ params }: Props) => {
             <TestimonialsSection testimonials={testimonials} />
         </div>
 
-        {isPublicFree && <UnlockOverlay uuid={uuid} />}
+        {isPublicFree && <UnlockOverlay uuid={uuid} clientDomain={report.client_domain} />}
         </>
     )
 }

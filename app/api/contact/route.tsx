@@ -5,6 +5,7 @@ import { client } from '@/lib/client'
 import { GET_EMAIL_TEMPLATES } from '@/lib/queries'
 import WPEmailTemplate from '@/app/emails/WPEmailTemplate'
 import { replacePlaceholders } from '@/app/utils/stringReplacement'
+import { verifyRecaptcha } from '@/app/utils/recaptcha'
 
 interface EmailTemplates {
     slug: string
@@ -20,21 +21,6 @@ interface EmailTemplateResponse {
     emailTemplates: {
         nodes: EmailTemplates[]
     }
-}
-
-// Verify reCAPTCHA token via Google's reCAPTCHA API
-const verifyRecaptcha = async (token: string): Promise<boolean> => {
-
-    // Skip verification in development
-    if (process.env.NODE_ENV === 'development') return true
-
-    const res = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${token}`
-    })
-    const data = await res.json()
-    return data.success && data.score >= 0.5
 }
 
 // Send email using Postmark
@@ -54,7 +40,7 @@ export const POST = async (req: NextRequest) => {
     }
 
     // Skip reCAPTCHA for internal form types (authenticated, non-public)
-    const internalFormTypes = ['report']
+    const internalFormTypes = ['report', 'public-report']
     if (!internalFormTypes.includes(formType)) {
         const isHuman = await verifyRecaptcha(recaptchaToken)
         if (!isHuman) {
