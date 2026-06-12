@@ -1,32 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { ServerClient } from 'postmark'
-import { render } from '@react-email/render'
-import { client } from '@/lib/client'
-import { GET_EMAIL_TEMPLATES } from '@/lib/queries'
-import WPEmailTemplate from '@/app/emails/WPEmailTemplate'
-import { replacePlaceholders } from '@/app/utils/stringReplacement'
 import { verifyRecaptcha } from '@/app/utils/recaptcha'
-
-interface EmailTemplates {
-    slug: string
-    emailTemplates: {
-        subject: string
-        bodyContent: string
-        formType: string[]
-        emailType: string[]
-    }
-}
-
-interface EmailTemplateResponse {
-    emailTemplates: {
-        nodes: EmailTemplates[]
-    }
-}
+import { sendEmails } from '@/app/utils/sendEmails'
 
 // Send email using Postmark
 export const POST = async (req: NextRequest) => {
   try {
-    const postmark = new ServerClient(process.env.POSTMARK_API_KEY!)
     const { formType, requiredFields, recaptchaToken, name, email, ...rest } = await req.json()
 
     const formData = {
@@ -39,7 +17,7 @@ export const POST = async (req: NextRequest) => {
         return NextResponse.json({ error: 'Missing form type.' }, { status: 400 })
     }
 
-    // Skip reCAPTCHA for internal form types (authenticated, non-public)
+    // Skip reCAPTCHA for internal form types (server-to-server calls)
     const internalFormTypes = ['report', 'public-report']
     if (!internalFormTypes.includes(formType)) {
         const isHuman = await verifyRecaptcha(recaptchaToken)
@@ -55,64 +33,8 @@ export const POST = async (req: NextRequest) => {
         }
     }
 
-    // Prepare variables for email template replacement
-    const vars: Record<string, string> = {
-        ...formData,
-        site_name: process.env.WP_SITE_NAME!,
-        site_url: process.env.WP_SITE_URL!,
-        admin_email: process.env.POSTMARK_ADMIN_EMAIL!,
-        site_report_link: formData.report_uuid
-            ? `<a href="${process.env.NEXT_PUBLIC_SITE_URL}/report/site-report/${formData.report_uuid}">site report</a>`
-            : ''
-    }
+    await sendEmails({ formType, name: name ?? '', email: email ?? '', extraVars: rest })
 
-    // Map email types to streams and from addresses
-    const streamMap: Record<string, { stream: string; from: string }> = {
-        confirmation: {
-            stream: process.env.POSTMARK_STREAM_GENERAL!,
-            from: process.env.POSTMARK_FROM_GENERAL!,
-        },
-        admin: {
-            stream: process.env.POSTMARK_STREAM_ENQUIRIES!,
-            from: process.env.POSTMARK_FROM_ADMIN!,
-        },
-        report: {
-            stream: process.env.POSTMARK_STREAM_REPORTS!,
-            from: process.env.POSTMARK_FROM_REPORTS!,
-        },
-    }
-
-    // Get email templates from WordPress
-    const data = await client.request<EmailTemplateResponse>(GET_EMAIL_TEMPLATES)
-    const formTemplates = data.emailTemplates.nodes.filter(
-        t => t.emailTemplates.formType.includes(formType)
-    )
-
-    // Check if any templates were found
-    if(!formTemplates.length) {
-        return NextResponse.json({ error: 'No email template found for this form type' }, { status: 500 })
-    }
-
-    // Send emails using Postmark
-    await Promise.all(
-        formTemplates.map(async tpl => {
-            const emailType = tpl.emailTemplates.emailType[0]
-            const { stream, from } = streamMap[emailType]
-            const to = emailType === 'admin' ? process.env.POSTMARK_ADMIN_EMAIL! : formData.sender_email
-            const body = replacePlaceholders(tpl.emailTemplates.bodyContent, vars)
-            const subject = replacePlaceholders(tpl.emailTemplates.subject, vars)
-            const html = await render(<WPEmailTemplate bodyContent={body} previewText={subject} />)
-            return postmark.sendEmail({
-                From: from,
-                To: to,
-                Subject: subject,
-                HtmlBody: html,
-                MessageStream: stream
-            })
-        })
-    )
-
-    // Return success response
     return NextResponse.json({ success: true })
   } catch (err) {
     console.error('[contact]', err)
