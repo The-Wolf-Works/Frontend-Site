@@ -11,6 +11,8 @@ interface SaveReportPayload {
     promptId: number
     promptTitle: string
     generatePDF: boolean
+    reportType?: 'internal' | 'public_free' | 'public_unlocked'
+    freeSectionsConfig?: string[] | null
 }
 
 /**
@@ -21,7 +23,9 @@ interface SaveReportPayload {
 export const POST = async (req: NextRequest) => {
     try {
         const {
-            reportData, clientName, clientEmail, clientDomain, uuid, promptId, promptTitle, generatePDF }: SaveReportPayload = await req.json()
+            reportData, clientName, clientEmail, clientDomain, uuid, promptId, promptTitle, generatePDF,
+            reportType = 'internal', freeSectionsConfig = null
+        }: SaveReportPayload = await req.json()
 
         if (!reportData || !clientName || !clientEmail || !clientDomain || !uuid || !promptId) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -37,7 +41,9 @@ export const POST = async (req: NextRequest) => {
                 uuid,
                 prompt_id: promptId,
                 prompt_title: promptTitle,
-                generate_pdf: generatePDF
+                generate_pdf: generatePDF,
+                report_type: reportType,
+                free_sections_config: freeSectionsConfig ? JSON.stringify(freeSectionsConfig) : null
             })
         })
 

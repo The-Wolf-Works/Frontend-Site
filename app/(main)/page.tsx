@@ -16,7 +16,7 @@ import type {
     GetTestimonialsResponse
 } from '@/lib/types';
 
-import Hero from '../components/homepage/Hero';
+import HeroWithForm from '../components/homepage/HeroWithForm';
 import HowItWorks from '../components/blocks/HowItWorks';
 import PricingGuide from '../components/blocks/PricingGuide';
 import WhyTheWolfWorks from '../components/blocks/WhyTheWolfWorks';
@@ -49,7 +49,7 @@ const Home = async () => {
 
     return (
         <>
-            <Hero hero={hero} />
+            <HeroWithForm hero={hero} />
             {howItWorks && <HowItWorks block={howItWorks} />}
             {whyTheWolfWorks && <WhyTheWolfWorks block={whyTheWolfWorks} />}
             {testimonials && <Testimonials testimonials={testimonials} />}

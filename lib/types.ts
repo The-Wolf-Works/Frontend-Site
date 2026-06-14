@@ -212,8 +212,9 @@ export interface GetServicePackagesResponse {
 export interface AiReportPrompt {
     databaseId: number
     title: string
-    aiReportPrompts: {
-        postContent: string
+    content?: string
+    aiReportPrompts?: {
+        freeSections: string[] | null
     }
 }
 export interface GetAiReportPromptsResponse {
@@ -246,10 +247,17 @@ export interface ConversionReadiness {
 export interface WolfScoreData {
     score: number
     summary: string
-    red_flags: string[]
-    leaky_bucket: string
     strategic_pivot: string
     recommendation: string
+}
+export interface PillarsData {
+    accessibility_view: string
+    client_view: string
+    revenue_view: string
+}
+export interface RedFlagsData {
+    items: string[]
+    leaky_bucket: string
 }
 export interface AiEdgeRoiRow {
     metric: string
@@ -264,17 +272,22 @@ export interface AiEdge {
 }
 export interface ReportStructuredData {
     executive_summary: string
-    quick_win: { title: string; description: string }
-    accessibility_view: string
-    client_view: string
-    revenue_view: string
-    ai_edge?: AiEdge
-    conversion_readiness: ConversionReadiness
     wolf_score: WolfScoreData
+    conversion_readiness: ConversionReadiness
+    pillars: PillarsData
+    red_flags: RedFlagsData
+    quick_win: { title: string; description: string }
+    ai_edge?: AiEdge
     report_html: string
 }
 
 // Shape returned by the WP REST fetch-by-UUID endpoint
+export interface ProgressSection {
+    id: string
+    label: string
+    locked: boolean
+}
+
 export interface SiteReportResponse extends ReportStructuredData {
     client_name: string
     client_email: string
@@ -282,5 +295,7 @@ export interface SiteReportResponse extends ReportStructuredData {
     report_generated_at?: string
     report_prompt_title?: string
     actioned_packages: number[]
+    report_type: 'internal' | 'public_free' | 'public_unlocked'
+    free_sections_config: string[] | null
 }
 
