@@ -50,7 +50,7 @@ const MobileSlider = ({ children, desktopClassName = '', labels }: Props) => {
                         <p className="text-white/30 text-xs font-medium tracking-wide">{labels}</p>
                     </div>
                 )}
-                <div ref={emblaRef}>
+                <div ref={emblaRef} className="overflow-hidden">
                     <div className="flex gap-4">
                         {items.map((child, i) => (
                             <div key={i} className="flex-[0_0_100%] min-w-0">
