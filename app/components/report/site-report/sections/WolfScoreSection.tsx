@@ -9,7 +9,7 @@ import useScrollInView from '@/app/hooks/useScrollInView'
 interface Props {
     score: number
     summary: string
-    executiveSummary: string
+    executiveSummary: string | null
 }
 
 /**

@@ -19,12 +19,14 @@ export const generateReport = async (
         provider,
         model,
         systemPrompt: SYSTEM_PROMPT,
-        userPrompt: promptContent
+        userPrompt: promptContent,
+        maxTokens: 32000,
     })
 
     try {
         return JSON.parse(raw) as ReportStructuredData
     } catch {
+        console.error('AI response was not valid JSON. Full response:\n', raw)
         throw new Error(`AI response was not valid JSON. First 200 chars: ${raw.slice(0, 200)}`)
     }
 }

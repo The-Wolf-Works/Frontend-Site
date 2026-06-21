@@ -4,21 +4,14 @@ import { icons } from '@/app/components/icons/Icons'
 import SectionLabel from '../SectionLabel'
 import DotGrid from '@/app/components/common/DotGrid'
 import useScrollInView from '@/app/hooks/useScrollInView'
+import { RedFlagsData } from '@/lib/types'
 
 interface Props {
-    redFlags: string[]
-    leakyBucket: string
+    data: RedFlagsData
 }
 
-/**
- * Two-column section highlighting critical issues and revenue leakage.
- * Left column lists each red flag as a staggered slide-in row with a flag icon.
- * Right column renders the "Leaky Bucket" card — where the site is losing money.
- *
- * @param redFlags    - Array of plain-text issue strings, each rendered as a flag row.
- * @param leakyBucket - Plain-text description of the primary revenue leak.
- */
-const RedFlagsSection = ({ redFlags, leakyBucket }: Props) => {
+const RedFlagsSection = ({ data }: Props) => {
+    const { items: redFlags, leaky_bucket: leakyBucket } = data
     const { ref, inView, fadeUp } = useScrollInView()
 
     return (
