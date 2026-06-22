@@ -67,11 +67,17 @@ const StepFinalise = ({ formData, reportData, onBack, onReset }: Props) => {
             })
 
             if (!res.ok) {
+                const errData = await res.json().catch(() => ({}))
+                console.error('[StepFinalise] save error', res.status, errData)
                 setActions(prev => ({ ...prev, save: 'error', pdf: generatePDF ? 'error' : 'idle' }))
                 return
             }
 
-            setActions(prev => ({ ...prev, save: 'success', pdf: generatePDF ? 'success' : 'idle' }))
+            const resData = await res.json()
+            const pdfFailed = generatePDF && !!resData.pdf_error
+            if (pdfFailed) console.warn('[StepFinalise] PDF generation failed:', resData.pdf_error)
+
+            setActions(prev => ({ ...prev, save: 'success', pdf: generatePDF ? (pdfFailed ? 'error' : 'success') : 'idle' }))
 
             if (sendEmail) {
                 setActions(prev => ({ ...prev, email: 'loading' }))

@@ -43,19 +43,21 @@ export const POST = async (req: NextRequest) => {
                 prompt_title: promptTitle,
                 generate_pdf: generatePDF,
                 report_type: reportType,
-                free_sections_config: freeSectionsConfig ? JSON.stringify(freeSectionsConfig) : null
+                ...(freeSectionsConfig ? { free_sections_config: JSON.stringify(freeSectionsConfig) } : {})
             })
         })
 
         if (!res.ok) {
             const errorData = await res.json().catch(() => null)
+            console.error('[save] WP returned', res.status, JSON.stringify(errorData))
             return NextResponse.json({ error: errorData?.message ?? 'Failed to save report' }, { status: 500 })
         }
 
         const data = await res.json()
         return NextResponse.json(data)
 
-    } catch  (error) {
+    } catch (error) {
+        console.error('[save] unexpected error', error)
         return NextResponse.json({ error: error instanceof Error ? error.message : 'Failed to save report' }, { status: 500 })
     }
 }
