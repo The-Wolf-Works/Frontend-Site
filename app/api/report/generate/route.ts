@@ -20,11 +20,6 @@ export const POST = async (req: NextRequest) => {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
         }
 
-        const isHuman = await verifyRecaptcha(recaptchaToken ?? '')
-        if (!isHuman) {
-            return NextResponse.json({ error: 'Failed spam check.' }, { status: 400 })
-        }
-
         const data = await client.request<GetAiReportPromptResponse>(GET_AI_REPORT_PROMPT, {
             id: promptId
         })
