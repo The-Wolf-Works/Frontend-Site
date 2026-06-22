@@ -4,8 +4,6 @@ import { GET_AI_REPORT_PROMPT } from "@/lib/queries"
 import { GetAiReportPromptResponse } from "@/lib/types"
 import { replacePlaceholders } from '@/app/utils/stringReplacement'
 import { generateReport } from './reportGenerator'
-import { verifyRecaptcha } from '@/app/utils/recaptcha'
-
 /**
     * Generates an AI report for a given client and prompt
     * @param req - clientName, clientEmail, clientDomain, promptId
@@ -14,7 +12,7 @@ import { verifyRecaptcha } from '@/app/utils/recaptcha'
 export const POST = async (req: NextRequest) => {
 
     try {
-        const { clientName, clientEmail, clientDomain, promptId, recaptchaToken } = await req.json()
+        const { clientName, clientEmail, clientDomain, promptId } = await req.json()
 
         if (!clientName || !clientEmail || !clientDomain || !promptId) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
